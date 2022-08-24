@@ -1,0 +1,34 @@
+Path="/home/moonlight/bynet_teach"
+echo "Check Year"
+Year=`date +%Y`
+if [ -d "$Path/$Year" ];
+then
+        echo "COOL"
+else
+        mkdir $Path/$Year
+fi
+echo "Check Month"
+
+
+
+Month=`date +%m`
+if [ -d "$Path/$Year/$Month" ];
+then
+        echo "COOL"
+else
+        mkdir -p $Path/$Year/$Month/
+fi
+
+
+
+echo "Check Day"
+Day=`date +%d`
+if [ -d "$Path/$Year/$Month/$Day" ];
+then
+        echo "COOL"
+else
+        mkdir -p $Path/$Year/$Month/$Day
+fi
+
+
+tar -czvf $Path/$Year/$Month/$Day/backup.tar.gz ./date-time.log

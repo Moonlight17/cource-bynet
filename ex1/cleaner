@@ -1,0 +1,21 @@
+Path="/home/moonlight/bynet_teach"
+Year=`date +%Y -d "5 day ago"`
+
+echo "Check Month"
+
+Month=`date +%m -d "5 day ago"`
+
+echo "Check Day"
+Day=`date +%d -d "5 day ago"`
+
+if [ -d "$Path/$Year/$Month/$Day/backup.tar.gz" ];
+then
+        echo "COOL"
+	rm $Path/$Year/$Month/$Day/backup.tar.gz
+else
+	echo "all okay"        
+#mkdir -p $Path/$Year/$Month/$Day
+fi
+
+
+# tar -czvf $Path/$Year/$Month/$Day/backup.tar.gz ./date-time.log

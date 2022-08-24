@@ -1,0 +1,14 @@
+#/usr/bin/bash
+path=$1                                     #parametr write to var
+list=(`find $path -maxdepth 1 -type f `)    #get list files in our path
+length=${#list[@]}                          #get length our array
+
+for (( i=1; i<=${length}; i++ ));           #for every file in our list DO:
+do
+  echo "$i, " "${list[$i-1]}," "`md5sum ${list[$i-1]}|awk '{print $1; exit}' | xargs -P 10`"
+done
+
+#echo string which we have 3 parts:
+#1. Number
+#2. Name our file
+#3. run md5sum with parametr our filename
