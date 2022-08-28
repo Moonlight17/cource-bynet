@@ -73,14 +73,43 @@ def read_csv(list_csv):
 
 
 # function for adding data to result file
-def add_result_file():
-    # Use a breakpoint in the code line below to debug your script.
+def add_result_file_simple(data):
+    # print(type(json.loads(data)))
     try:
-        main_file = csv.read_csv("C:/Users/kennethcassel/homes.csv")
-    except:
-        print("not work!!!")
-        ef = open('./main.csv', 'x')
-        ef.close()
+        df = pandas.read_csv('result.csv',
+                             encoding="utf-16",
+                             sep="\t",
+                             header=0,
+                             engine='python')
+        if not df.empty:
+            # print(type(data))
+            print(data)
+            df['TEST1'] = json.loads(data['Attendance Duration'])
+            df.to_csv('result.csv',
+                      encoding="utf-16",
+                      sep="\t",
+                      header=True,
+                      index=False)
+        else:
+            print()
+        # with open('result.csv') as csvfile:
+        #     reader = csv.DictReader(csvfile)
+        #     for row in reader:
+        #         print(row['first_name'], row['last_name'])
+    except FileNotFoundError:
+        print("Where file?")
+    except pandas.errors.EmptyDataError:
+        data = pandas.DataFrame.from_dict(json.loads(data), orient ='index')
+        for item in data:
+            print(item)
+        data.to_csv('result.csv',
+                    index=False,
+                             encoding="utf-16",
+                             sep="\t",
+                            # columns=['Email', 'Attendance Duration'],
+                             header=1)
+        print("###Pizdec###")
+    # print(data)
 
 # def collect_data():
 #     with open('eggs.csv', newline='') as csvfile:
