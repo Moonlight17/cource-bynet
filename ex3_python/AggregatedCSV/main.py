@@ -4,9 +4,10 @@
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 # os - find all files
 # fnmatch - filter files-csv
-# re - parse date from name's file
+# csv - open and work with final csv-file
 # pandas - for work with csv-files
-import os, fnmatch, re, pandas
+# difflib - for comparison emails
+import os, fnmatch, csv, pandas, difflib, json
 
 # VARIABLES
 path=""
