@@ -46,10 +46,13 @@ def read_csv(list_csv):
 
             # df.groupby(['Name'])
             data = df[['Name']]
-            data['AttNoMin'] = df[['Attendance Duration']].apply(lambda time: time.str.split().str[0].astype('int64'))
-            result = data.groupby('Name')['AttNoMin'].sum()
-            # count = data.shape[0]
-            print(result)
+            df[['Attendance Duration']].replace(r' mins', '')
+            df[['Attendance Duration']] = df[['Attendance Duration']].replace(regex=[r' mins$'], value='').astype('int64')
+            # print(df[['Attendance Duration']])
+            # result = df.groupby('Name')['Name', 'Attendance Duration'].transform('sum')
+            result = df.groupby(by="Attendee Email", dropna=False).sum()
+
+            # print(result)
             # for item in data:
             #     print(data)
             # print(df.update())
