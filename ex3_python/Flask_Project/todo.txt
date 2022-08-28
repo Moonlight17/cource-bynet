@@ -1,0 +1,14 @@
+- [x] Complete as many Flask Quickstart Tutorial sections as it is possible - or interesting. Our focus is on developing the back-end first, so the bare minimum is: #TODO
+    - [x] basic routing #TODO
+    - [x] parameters #TODO
+    - [x] setting response headers #TODO
+    - [x] returning JSON response properly (with proper Content-Type header) #TODO
+- [x] Read about REST API basics (use Google :wink: ) #TODO
+- [x] Try to think our back-end API through: what requests we need, what responses we can give #TODO
+- [x] (Optional) Learn about using cURL to test the back-end: #TODO
+    - [x] how to see response headers #TODO
+    - [x] how to send basic HTTP GET request #TODO
+    - [x] (bonus) how to send basic HTTP POST request #TODO
+    - [x] (bonus) how to do HTTP authentication #TODO
+- [x] (Optional, bonus) Learn about CORS #TODO
+
