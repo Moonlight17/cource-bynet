@@ -31,40 +31,23 @@ def get_int_minutes(text):
 
 def read_csv(list_csv):
     for file in list_csv:
-        data = [{}]
+        # data = [{}]
         try:
-            print(file)
+            # print(file)
             df = pandas.read_csv(file,
                                  encoding="utf-16",
                                  sep="\t",
-                                 # index_col='Name',
-                                 # parse_dates=['Meeting Start Time', 'Meeting End Time'],
                                  header=0,
-                                 # names=column_in_csv,
                                  engine='python')
-            # for digit in df['Attendance Duration']:
-            #     digit = get_int_minutes(digit)
-
-            # df.groupby(['Name'])
-            data = df[['Name']]
+            # data = df[['Name']]
             df[['Attendance Duration']].replace(r' mins', '')
             df[['Attendance Duration']] = df[['Attendance Duration']].replace(regex=[r' mins$'], value='').astype('int64')
-            # print(df[['Attendance Duration']])
-            # result = df.groupby('Name')['Name', 'Attendance Duration'].transform('sum')
-            result = df.groupby(by="Attendee Email", dropna=False).sum()
+            result = df.groupby(by="Attendee Email", dropna=False, sort=False).sum()
 
             # print(result)
-            # for item in data:
-            #     print(data)
-            # print(df.update())
-            # try:
-            #     data[df['Name']] = {
-            #         "name": df['Name'],
-            #         "time": df['Attendance Duration']
-            #
-            #     }
-            # except OSError:
-            #     print("problem with data")
+            # return result.to_json()
+            return result
+
 
         except OSError:
             print("kalsdknaoskdn")
@@ -74,28 +57,16 @@ def read_csv(list_csv):
 
 # function for adding data to result file
 def add_result_file_simple(data):
-    # print(type(json.loads(data)))
+
     try:
-        df = pandas.read_csv('result.csv',
-                             encoding="utf-16",
-                             sep="\t",
-                             header=0,
-                             engine='python')
-        if not df.empty:
-            # print(type(data))
-            print(data)
-            df['TEST1'] = json.loads(data['Attendance Duration'])
-            df.to_csv('result.csv',
-                      encoding="utf-16",
-                      sep="\t",
-                      header=True,
-                      index=False)
-        else:
-            print()
-        # with open('result.csv') as csvfile:
-        #     reader = csv.DictReader(csvfile)
-        #     for row in reader:
-        #         print(row['first_name'], row['last_name'])
+        data=data.rename(columns={'Attendance Duration': 'Piska'})
+        file = pandas.read_csv('week_grouped.csv')
+        result = data.groupby('Attendee Email')
+
+        result=result.sum().reset_index()[['Attendee Email', 'Piska']].to_csv('week_grouped.csv')
+        file = pandas.concat([file, result], axis=1)
+        # file.append(result, ignore_index=True)
+
     except FileNotFoundError:
         print("Where file?")
     except pandas.errors.EmptyDataError:
@@ -118,11 +89,30 @@ def add_result_file_simple(data):
 #         print(', '.join(row))
 
 
+
+def similarity(s1, s2):
+  normalized1 = s1.lower()
+  normalized2 = s2.lower()
+  matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
+  return matcher.ratio()
+
+
+
+
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    # print(similarity('qwertyuio@gmail.com', 'mnbvcxz@gmail.com'))
     # collect_data()
     list_csv = finding_all_csv()
-    read_csv(list_csv)
-    # add_result_file(data)
+    data = read_csv(list_csv)
+    add_result_file_simple(data)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+# Должно быть 3 таблицы
+# Emails (1-to-many) users
+# Пользователи ФИО, почта
+# Посещения (День, Юзер, Время)
