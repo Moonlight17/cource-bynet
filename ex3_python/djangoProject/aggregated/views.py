@@ -4,6 +4,8 @@ import os
 import pandas
 from datetime import datetime
 
+from aggregated.models import Participants, ListEmails, Aggregate
+
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 
@@ -11,8 +13,26 @@ from django.http import HttpResponse, JsonResponse
 path = ""
 data = None
 pattern = "participant-*.csv"
-column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time',
-                 'Leave Time', 'Attendance Duration', 'Connection Type']
+# column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time', 'Leave Time', 'Attendance Duration', 'Connection Type']
+
+# function for applying inforamtion to DB
+def insert_db(data):
+    for date in data:
+        list_emails = data[date]
+        for item in list_emails:
+            try:
+                email = ListEmails.objects.get(email=item)
+                user = Participants.objects.get(pk=email.user.id)
+                agger = Aggregate(participant=user, time_on_less=list_emails[item], date=date)
+                agger.save()
+                print("######################---SAVED---######################")
+            except ListEmails.DoesNotExist:
+                # print("blya")
+                s=0
+            except Participants.DoesNotExist:
+                # print("blya")
+                s=0
+    # Write ABOUT PROBLEM!!! (######################---SLACK---######################)
 
 
 # function for create list with csv's file
@@ -47,7 +67,6 @@ def read_csv(file):
         df[[str(meeting_date)]] = df[["Attendance Duration"]].replace(regex=[r' mins$'], value='').astype(
             'int64')
         result = df.groupby(by="Attendee Email", dropna=False, sort=False).sum()
-        print(type(result.to_json()))
         result=json.loads(result.to_json())
     except OSError:
         print("ERROR \n Where files?")
@@ -64,7 +83,8 @@ def parsingFile(request):
             all_data[list(data.keys())[0]] = data[list(data.keys())[0]]
     else:
         all_data['error'] = "ERROR \n Where files?"
-    return JsonResponse(all_data)
+    insert_db(all_data)
+    return HttpResponse("Hello, world. You're at the polls index.")
 
 
 
