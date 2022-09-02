@@ -4,7 +4,7 @@ import datetime
 
 class Participants(models.Model):
     Name = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published', default=datetime.datetime.now(), blank=True)
 
 
 class ListEmails(models.Model):
