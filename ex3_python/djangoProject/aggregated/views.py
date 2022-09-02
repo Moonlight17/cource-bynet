@@ -50,21 +50,23 @@ def read_csv(file):
         print(type(result.to_json()))
         result=json.loads(result.to_json())
     except OSError:
-        print("kalsdknaoskdn")
-
-        # print(data)
+        print("ERROR \n Where files?")
     return result, meeting_date
 
 
-def parsing(request):
+def parsingFile(request):
     list_csv = finding_all_csv()
     data = {}
     all_data = {}
-    for file in list_csv:
-        data, date = read_csv(file)
-        all_data[list(data.keys())[0]] = data[list(data.keys())[0]]
-    print(all_data)
+    if len(list_csv):
+        for file in list_csv:
+            data, date = read_csv(file)
+            all_data[list(data.keys())[0]] = data[list(data.keys())[0]]
+    else:
+        all_data['error'] = "ERROR \n Where files?"
     return JsonResponse(all_data)
+
+
 
 
 def index(request):
