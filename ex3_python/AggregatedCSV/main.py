@@ -8,6 +8,7 @@
 # pandas - for work with csv-files
 # difflib - for comparison emails
 import os, fnmatch, csv, pandas, difflib, json
+from datetime import datetime
 
 # VARIABLES
 path=""
@@ -29,41 +30,47 @@ def get_int_minutes(text):
     print(text)
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-def read_csv(list_csv):
-    for file in list_csv:
-        # data = [{}]
-        try:
-            # print(file)
-            df = pandas.read_csv(file,
-                                 encoding="utf-16",
-                                 sep="\t",
-                                 header=0,
-                                 engine='python')
-            # data = df[['Name']]
-            df[['Attendance Duration']].replace(r' mins', '')
-            df[['Attendance Duration']] = df[['Attendance Duration']].replace(regex=[r' mins$'], value='').astype('int64')
-            result = df.groupby(by="Attendee Email", dropna=False, sort=False).sum()
-
-            # print(result)
-            # return result.to_json()
-            return result
+def select_date(date_time_str):
+    date_time_str = date_time_str[2:-1]
+    date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
+    return date_time_obj.date()
 
 
-        except OSError:
-            print("kalsdknaoskdn")
+def read_csv(file):
+    destiny = pandas.DataFrame()
+    meeting_date = datetime
+    try:
+        df = pandas.read_csv(file,
+                             encoding="utf-16",
+                             sep="\t",
+                             header=0,
+                             engine='python')
+        # data = df[['Name']]
+        # print("DFFFFF", df)
+        meeting_date = select_date(df.loc[0]['Meeting Start Time'])
+        df[['Attendance Duration']].replace(r' mins', '')
+        df[['Attendance Duration']] = df[['Attendance Duration']].replace(regex=[r' mins$'], value='').astype(
+            'int64')
+        result = df.groupby(by='Attendee Email', dropna=False, sort=False).sum()
+
+        print("RESULTTTTT:", result.reset_index().to_json(orient='records'))
+
+
+    except OSError:
+        print("kalsdknaoskdn")
 
         # print(data)
+    return destiny, meeting_date
 
 
 # function for adding data to result file
-def add_result_file_simple(data):
-
+def add_result_file_simple(data, date):
     try:
-        data=data.rename(columns={'Attendance Duration': 'Piska'})
+        data=data.rename(columns={'Attendance Duration': date})
         file = pandas.read_csv('week_grouped.csv')
         result = data.groupby('Attendee Email')
 
-        result=result.sum().reset_index()[['Attendee Email', 'Piska']].to_csv('week_grouped.csv')
+        result=result.sum().reset_index()[['Attendee Email', date]].to_csv('week_grouped.csv')
         file = pandas.concat([file, result], axis=1)
         # file.append(result, ignore_index=True)
 
@@ -103,11 +110,15 @@ def similarity(s1, s2):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # print(similarity('qwertyuio@gmail.com', 'mnbvcxz@gmail.com'))
+    print(similarity('estherwah9@gmail.com', 'estherwa@gmai.com'))
     # collect_data()
-    list_csv = finding_all_csv()
-    data = read_csv(list_csv)
-    add_result_file_simple(data)
+    # list_csv = finding_all_csv()
+    # for file in list_csv:
+    #     print("FILE", file)
+    #     data, date = read_csv(file)
+    #     print("data")
+    #     print(data)
+    # add_result_file_simple(data, date)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
