@@ -1,7 +1,10 @@
+# difflib - for comparison emails
 import fnmatch
 import json
 import os
+import difflib
 import pandas
+
 from datetime import datetime
 
 from aggregated.models import Participants, ListEmails, Aggregate
@@ -15,6 +18,14 @@ data = None
 pattern = "participant-*.csv"
 # column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time', 'Leave Time', 'Attendance Duration', 'Connection Type']
 
+
+def similarity(s1, s2):
+  normalized1 = s1.lower()
+  normalized2 = s2.lower()
+  matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
+  return matcher.ratio()
+
+
 # function for applying inforamtion to DB
 def insert_db(data):
     for date in data:
@@ -25,12 +36,14 @@ def insert_db(data):
                 user = Participants.objects.get(pk=email.user.id)
                 agger = Aggregate(participant=user, time_on_less=list_emails[item], date=date)
                 agger.save()
-                print("######################---SAVED---######################")
             except ListEmails.DoesNotExist:
-                # print("blya")
+                print("Email...blya", item, "---", list_emails[item])
+                all_mails = ListEmails.objects.all()
+                for mail in all_mails:
+                    similarity(item, mail.email)
                 s=0
             except Participants.DoesNotExist:
-                # print("blya")
+                print("Participants...blya")
                 s=0
     # Write ABOUT PROBLEM!!! (######################---SLACK---######################)
 
