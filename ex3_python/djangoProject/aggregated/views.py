@@ -8,6 +8,7 @@ import pandas
 from datetime import datetime
 
 from aggregated.models import Participants, ListEmails, Aggregate
+from aggregated.serializers import AggregateSerializer
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -104,3 +105,27 @@ def parsingFile(request):
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
+
+def my_date_view(request, from_date, to_date):
+    # this works with either a date object or a iso formatted string.
+    # queryset = MyModel.objects(published_on=selected_day)
+
+    # or use strptime to get a date object.
+    from_date_pr = datetime.strptime(from_date, '%Y-%m-%d').date()
+    print(from_date_pr)
+    to_date_pr = datetime.strptime(to_date, '%Y-%m-%d').date()
+    print(to_date_pr)
+    query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr))
+    serializer = AggregateSerializer(query, many=True)
+
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     return JsonResponse(serializer.data, status=200)
+    # return JsonResponse(serializer.errors, status=400)
+    #
+    return JsonResponse(serializer.data, safe=False)
+
+# def getNameandDept(request, salary):
+#     users = User.objects.filter(salary__gt=salary)
+#
+#     return HttpResponse(serializer.serialize(users), mimetype='application/json')
