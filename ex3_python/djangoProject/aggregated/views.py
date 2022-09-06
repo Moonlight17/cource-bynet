@@ -35,17 +35,17 @@ def insert_db(data):
             try:
                 email = ListEmails.objects.get(email=item)
                 user = Participants.objects.get(pk=email.user.id)
-                agger = Aggregate(participant=user, time_on_less=list_emails[item], date=date)
-                agger.save()
+                Aggregate.objects.get_or_create(participant=user, time_on_less=list_emails[item], date=date)
             except ListEmails.DoesNotExist:
-                print("Email...blya", item, "---", list_emails[item])
+                print("Email... ", item, "---", list_emails[item])
                 all_mails = ListEmails.objects.all()
                 for mail in all_mails:
                     similarity(item, mail.email)
+                #     Need send notification in Slack each user
                 s=0
             except Participants.DoesNotExist:
                 print("Participants...blya")
-                s=0
+                #     Need send notification in Slack Manager the project
     # Write ABOUT PROBLEM!!! (######################---SLACK---######################)
 
 
