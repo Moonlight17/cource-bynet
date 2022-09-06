@@ -35,7 +35,8 @@ export default {
   },
   methods: {
     getList() {
-      this.axios.get('http://localhost:8000/aggregate/2022-06-01/2022-10-01/').then((response) => {
+      this.axios.get('http://localhost:8000/aggregate/2022-08-08/2022-08-09/').then((response) => {
+        this.$parent.$data.aggregates = response.data
         console.log(response.data)
       })
     }
