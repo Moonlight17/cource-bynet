@@ -17,7 +17,7 @@ class ListEmailsSerializer(serializers.ModelSerializer):
 
 class AggregateSerializer(serializers.ModelSerializer):
     participant = ParticipantSerializer()
-    print(participant)
+
     # Participant_Name = serializers.SerializerMethodField(source='Participant.Name')
 
     # email = ListEmailsSerializer( many=True)
