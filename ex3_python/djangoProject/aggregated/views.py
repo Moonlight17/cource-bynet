@@ -17,14 +17,17 @@ from django.http import HttpResponse, JsonResponse
 path = ""
 data = None
 pattern = "participant-*.csv"
-# column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time', 'Leave Time', 'Attendance Duration', 'Connection Type']
+
+
+# column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time',
+# 'Leave Time', 'Attendance Duration', 'Connection Type']
 
 
 def similarity(s1, s2):
-  normalized1 = s1.lower()
-  normalized2 = s2.lower()
-  matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
-  return matcher.ratio()
+    normalized1 = s1.lower()
+    normalized2 = s2.lower()
+    matcher = difflib.SequenceMatcher(None, normalized1, normalized2)
+    return matcher.ratio()
 
 
 # function for applying inforamtion to DB
@@ -42,7 +45,7 @@ def insert_db(data):
                 for mail in all_mails:
                     similarity(item, mail.email)
                 #     Need send notification in Slack each user
-                s=0
+                s = 0
             except Participants.DoesNotExist:
                 print("Participants...blya")
                 #     Need send notification in Slack Manager the project
@@ -81,7 +84,7 @@ def read_csv(file):
         df[[str(meeting_date)]] = df[["Attendance Duration"]].replace(regex=[r' mins$'], value='').astype(
             'int64')
         result = df.groupby(by="Attendee Email", dropna=False, sort=False).sum()
-        result=json.loads(result.to_json())
+        result = json.loads(result.to_json())
     except OSError:
         print("ERROR \n Where files?")
     return result, meeting_date
@@ -99,8 +102,6 @@ def parsingFile(request):
         all_data['error'] = "ERROR \n Where files?"
     insert_db(all_data)
     return HttpResponse("Hello, world. You're at the polls index.")
-
-
 
 
 def index(request):
