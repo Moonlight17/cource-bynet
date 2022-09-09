@@ -12,6 +12,7 @@ from aggregated.serializers import AggregateSerializer
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # VARIABLES
 path = ""
@@ -107,6 +108,38 @@ def parsingFile(request):
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
+
+def allListBetweenDate(from_date_pr, to_date_pr):
+    query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr)).order_by('date')
+    return query
+
+
+def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
+    data = request.POST
+    print("POST:   ", type(data.getlist('need')))
+    try:
+        need = data.getlist('need')
+    except:
+        need = None
+
+    try:
+        status = data['status']
+    except:
+        status = None
+    print(need)
+    # need = [7, 69, 82]
+    if need:
+        query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant_id__in=need).order_by(
+            'date')
+    elif status != 'All':
+        query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant__status=status).order_by(
+            'date')
+
+    # query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr)).order_by('date')
+    return query
+
+
+@csrf_exempt
 def my_date_view(request, from_date, to_date):
     # ===
     # or use strptime to get a date object.
@@ -117,11 +150,24 @@ def my_date_view(request, from_date, to_date):
     # serializer = AggregateSerializer(query, many=True)
     # ===
 
-    if request.method == 'GET':
-        result = allListBetweenDate(from_date, to_date)
-    elif request.method == 'POST':
-        result = allListBetweenDateAndFilters(request, from_date, to_date)
+    result = {}
+    from_date_pr = datetime.strptime(from_date, '%Y-%m-%d').date()
+    to_date_pr = datetime.strptime(to_date, '%Y-%m-%d').date()
 
+    if request.method == 'GET':
+        query = allListBetweenDate(from_date_pr, to_date_pr)
+    elif request.method == 'POST':
+        query = allListBetweenDateAndFilters(request, from_date_pr, to_date_pr)
+
+    for item in query:
+        # print(item)
+        try:
+            result[item.participant.Name][str(item.date)] = item.time_on_less
+        except KeyError:
+            result[item.participant.Name] = {}
+            result[item.participant.Name]['id'] = item.participant.id
+            result[item.participant.Name]['status'] = item.participant.status
+            result[item.participant.Name][str(item.date)] = item.time_on_less
     return JsonResponse(result, safe=False)
 
 # def getNameandDept(request, salary):
