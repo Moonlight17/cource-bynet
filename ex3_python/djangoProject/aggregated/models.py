@@ -3,6 +3,7 @@ import datetime
 from django.contrib import admin
 from django.utils.html import format_html
 
+
 class Participants(models.Model):
     Name = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published', default=datetime.datetime.now(), blank=True)
@@ -20,7 +21,6 @@ class ListEmails(models.Model):
     def participant(self):
         return self.user.Name
 
-
     def __str__(self):
         return self.email
 
@@ -32,7 +32,6 @@ class Aggregate(models.Model):
 
     def __str__(self):
         return str(self.date)
-
 
     def all(self):
         return format_html(
