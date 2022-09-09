@@ -108,16 +108,14 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def my_date_view(request, from_date, to_date):
-    # this works with either a date object or a iso formatted string.
-    # queryset = MyModel.objects(published_on=selected_day)
-
+    # ===
     # or use strptime to get a date object.
-    from_date_pr = datetime.strptime(from_date, '%Y-%m-%d').date()
-    print(from_date_pr)
-    to_date_pr = datetime.strptime(to_date, '%Y-%m-%d').date()
-    print(to_date_pr)
-    query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr))
-    serializer = AggregateSerializer(query, many=True)
+    # from_date_pr = datetime.strptime(from_date, '%Y-%m-%d').date()
+    # to_date_pr = datetime.strptime(to_date, '%Y-%m-%d').date()
+    # students = Participants.objects.filter(status=0)
+    # query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant__in=students)
+    # serializer = AggregateSerializer(query, many=True)
+    # ===
 
     # if serializer.is_valid():
     #     serializer.save()
