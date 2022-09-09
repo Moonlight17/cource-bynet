@@ -7,7 +7,7 @@ import pandas
 
 from datetime import datetime
 
-from aggregated.models import Participants, ListEmails, Aggregate
+from aggregated.models import Participants, ListEmails, Aggregate, Lessons
 from aggregated.serializers import AggregateSerializer
 
 from django.conf import settings
@@ -66,6 +66,10 @@ def finding_all_csv():
 def select_date(date_time_str):
     date_time_str = date_time_str[2:-1]
     date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
+    if (date_time_obj.weekday() == 1):
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of")
+    else:
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On")
     return date_time_obj.date()
 
 
@@ -101,6 +105,8 @@ def parsingFile(request):
             all_data[list(data.keys())[0]] = data[list(data.keys())[0]]
     else:
         all_data['error'] = "ERROR \n Where files?"
+        return HttpResponse("ERROR \n Where files?")
+
     insert_db(all_data)
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -159,15 +165,24 @@ def my_date_view(request, from_date, to_date):
     elif request.method == 'POST':
         query = allListBetweenDateAndFilters(request, from_date_pr, to_date_pr)
 
+    dates = Lessons.objects.filter(meet_date__range=(from_date_pr, to_date_pr)).order_by('meet_date')
+    result['dates'] = []
+    for date in dates:
+        result['dates'].append({'date': date.meet_date, 'status': date.status})
     for item in query:
         # print(item)
         try:
-            result[item.participant.Name][str(item.date)] = item.time_on_less
+            result[item.participant.Name]['lessons'][str(item.date)] = item.time_on_less
         except KeyError:
             result[item.participant.Name] = {}
             result[item.participant.Name]['id'] = item.participant.id
+            result[item.participant.Name]['Name'] = item.participant.Name
             result[item.participant.Name]['status'] = item.participant.status
-            result[item.participant.Name][str(item.date)] = item.time_on_less
+            result[item.participant.Name]['lessons'] = {}
+            for date in dates:
+                result[item.participant.Name]['lessons'][str(date.meet_date)] = 0
+            result[item.participant.Name]['lessons'][str(item.date)] = item.time_on_less
+
     return JsonResponse(result, safe=False)
 
 # def getNameandDept(request, salary):
