@@ -47,3 +47,20 @@ class Aggregate(models.Model):
             self.participant.Name,
             self.time_on_less,
         )
+
+
+class Lessons(models.Model):
+    class Status(models.TextChoices):
+        Online = 'On', _('Online')
+        Offline = 'Of', _('Offline')
+
+    meet_date = models.DateField('Lessons', default=datetime.date.today)
+    status = models.CharField(max_length=2,
+        choices=Status.choices,
+        default=Status.Online,)
+
+    # status = models.IntegerField("Status Participants (0-student; 1-employer)", default=0)
+
+    def __str__(self):
+        return self.Name
+
