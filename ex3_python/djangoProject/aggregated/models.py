@@ -1,18 +1,19 @@
 from django.db import models
 import datetime
-from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 
 
 class Participants(models.Model):
-    class Status(models.IntegerChoices):
-        Student = 0
-        Employer = 1
-
+    class Status(models.TextChoices):
+        Student = 'ST', _('Student')
+        Employer = 'EM', _('Employer')
 
     Name = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published', default=datetime.datetime.now(), blank=True)
-    status = models.IntegerField(choices=Status.choices, default=0)
+    status = models.CharField(max_length=2,
+        choices=Status.choices,
+        default=Status.Student,)
 
     # status = models.IntegerField("Status Participants (0-student; 1-employer)", default=0)
 
