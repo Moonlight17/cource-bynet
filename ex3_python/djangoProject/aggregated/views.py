@@ -117,12 +117,12 @@ def my_date_view(request, from_date, to_date):
     # serializer = AggregateSerializer(query, many=True)
     # ===
 
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     return JsonResponse(serializer.data, status=200)
-    # return JsonResponse(serializer.errors, status=400)
-    #
-    return JsonResponse(serializer.data, safe=False)
+    if request.method == 'GET':
+        result = allListBetweenDate(from_date, to_date)
+    elif request.method == 'POST':
+        result = allListBetweenDateAndFilters(request, from_date, to_date)
+
+    return JsonResponse(result, safe=False)
 
 # def getNameandDept(request, salary):
 #     users = User.objects.filter(salary__gt=salary)
