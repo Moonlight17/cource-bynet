@@ -61,6 +61,4 @@ class Lessons(models.Model):
 
     # status = models.IntegerField("Status Participants (0-student; 1-employer)", default=0)
 
-    def __str__(self):
-        return self.Name
 
