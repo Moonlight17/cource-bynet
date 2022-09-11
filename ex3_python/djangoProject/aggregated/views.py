@@ -157,8 +157,11 @@ def my_date_view(request, from_date, to_date):
     # ===
 
     result = {}
-    from_date_pr = datetime.strptime(from_date, '%Y-%m-%d').date()
-    to_date_pr = datetime.strptime(to_date, '%Y-%m-%d').date()
+    from_date_pr = datetime.strptime(from_date, '%d-%m-%Y').date()
+    to_date_pr = datetime.strptime(to_date, '%d-%m-%Y').date()
+
+    print(from_date_pr)
+    print(to_date_pr)
 
     if request.method == 'GET':
         query = allListBetweenDate(from_date_pr, to_date_pr)
@@ -168,11 +171,13 @@ def my_date_view(request, from_date, to_date):
     dates = Lessons.objects.filter(meet_date__range=(from_date_pr, to_date_pr)).order_by('meet_date')
     result['dates'] = []
     for date in dates:
-        result['dates'].append({'date': date.meet_date, 'status': date.status})
+        result['dates'].append({'date': date.meet_date.strftime('%d %B').lstrip("0"), 'status': date.status})
     for item in query:
         # print(item)
         try:
-            result[item.participant.Name]['lessons'][str(item.date)] = item.time_on_less
+            # result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")] = item.time_on_less
+            result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")]['time'] = item.time_on_less
+
         except KeyError:
             result[item.participant.Name] = {}
             result[item.participant.Name]['id'] = item.participant.id
@@ -180,8 +185,9 @@ def my_date_view(request, from_date, to_date):
             result[item.participant.Name]['status'] = item.participant.status
             result[item.participant.Name]['lessons'] = {}
             for date in dates:
-                result[item.participant.Name]['lessons'][str(date.meet_date)] = 0
-            result[item.participant.Name]['lessons'][str(item.date)] = item.time_on_less
+                # print(date)
+                result[item.participant.Name]['lessons'][date.meet_date.strftime('%d %B').lstrip("0")] = {'time': 0, 'status': date.status}
+            result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")]['time'] = item.time_on_less
 
     return JsonResponse(result, safe=False)
 
