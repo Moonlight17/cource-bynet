@@ -1,14 +1,5 @@
 <template>
   <div class="hello">
-    <button
-        class="btn btn-primary"
-        data-bs-target="#collapseTarget"
-        data-bs-toggle="collapse">
-      Bootstrap collapse
-    </button>
-    <div class="collapse py-2" id="collapseTarget">
-      This is the toggle-able content!
-    </div>
     <div id="counter">
       Счётчик: {{ counter }}
     </div>
@@ -32,12 +23,26 @@ export default {
     // setInterval(() => {
     //   this.counter++
     // }, 1000)
+    this.getList();
   },
   methods: {
+    today() {
+      let currentDate = new Date();
+      let day = ("0" + currentDate.getDate()).slice(-2);
+      let month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+      let year = currentDate.getFullYear();
+      currentDate = day+'-'+month+'-'+year;
+      return currentDate
+
+    },
     getList() {
-      this.axios.get('http://localhost:8000/aggregate/2022-08-08/2022-08-09/').then((response) => {
+      let today = this.today();
+      // console.log(today);
+      this.axios.get('http://localhost:8000/aggregate/26-07-2022/'+today+'/').then((response) => {
+        this.$parent.$data.dates = response.data['dates']
+        delete response.data['dates'];
         this.$parent.$data.aggregates = response.data
-        console.log(response.data)
+        // console.log(response.data)
       })
     }
   }
