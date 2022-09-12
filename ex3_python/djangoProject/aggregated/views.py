@@ -112,9 +112,14 @@ def parsingFile(request):
 
 
 def ParticipantsList(request):
-    query = Participants.objects.all().order_by('Name')
-    serializer = ParticipantSerializer(instance=query, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    # query = Participants.objects.all().order_by('Name')
+    # serializer = ParticipantSerializer(instance=query, many=True)
+    students = Participants.objects.filter(status='ST').order_by('Name')
+    employers = Participants.objects.filter(status='EM').order_by('Name')
+    students_ser = ParticipantSerializer(instance=students, many=True)
+    employers_ser = ParticipantSerializer(instance=employers, many=True)
+    data=[{'label': 'Students', 'options': students_ser.data},{'label': 'Employers', 'options': employers_ser.data}]
+    return JsonResponse(data, safe=False)
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -127,7 +132,8 @@ def allListBetweenDate(from_date_pr, to_date_pr):
 
 def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
     data = request.POST
-    print("POST:   ", type(data.getlist('need')))
+    print("POST:   ", data)
+    print(data.getlist('need'))
     try:
         need = data.getlist('need')
     except:
