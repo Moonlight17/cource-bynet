@@ -1,7 +1,7 @@
 <template>
   <div class="aggregateTable ">
-    <h2>aggregateTable</h2>
-    <div class="table_block table-responsive-xxl">
+<!--    <h2>aggregateTable</h2>-->
+    <div class="table_block table-responsive">
       <table class="table scroll">
         <thead class="table-light">
         <tr>
@@ -86,7 +86,7 @@ table.scroll{
   max-width: 2500px;
   margin: 0 auto;
   margin-top: 6%;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.5), 0 10px 10px rgba(0,0,0,0.4);
   text-align: center;
   border-radius: 7px;
 }
