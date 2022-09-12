@@ -16,7 +16,7 @@
             </li>
           </ul>
           <form class="d-flex" role="search">
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Change dates</button>
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Filters</button>
           </form>
         </div>
       </div>
@@ -28,11 +28,20 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Change dates</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
+              <MultiSelect
+                  v-bind="example"
+                  :options="users"
+                  class="multiselect-blue"
+              >
+              </Multiselect>
+              <br>
+              <br>
+              <br>
+              <br>
               <Datepicker
                   v-model="value"
                   :startDate="minDate"
@@ -40,8 +49,8 @@
                   multiCalendars
                   multiCalendarsSolo
                   inline
+                  textInput
                   autoApply
-                  :disabledWeekDays="[0, 5, 6]"
                   :minDate="minDate"
                   modelType="dd-MM-yyyy"
                   :enableTimePicker="false"
@@ -50,7 +59,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" @click="test();">Save changes</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="test(example.value);">Save changes</button>
             </div>
           </div>
         </div>
@@ -63,29 +72,12 @@
 // import { ref } from 'vue';
 
 export default {
-  // setup() {
-  //   const date = ref(new Date());
-  //   // In case of a range picker, you'll receive [Date, Date]
-  //   const format = (date) => {
-  //     const day = date.getDate();
-  //     const month = date.getMonth() + 1;
-  //     const year = date.getFullYear();
-  //
-  //         return `Selected date is ${day}-${month}-${year}`;
-  //     }
-  //       return {
-  //         date,
-  //         format,
-  //   }
-  // },
   name: "navigBlock",
   components: {
-    // Calendar
-    // navigBlock
   },
-  // props: {
-  //   list: Array,
-  // },
+  props: {
+    users: Array,
+  },
   data(){
     return{
       list_countries:null,
@@ -93,12 +85,21 @@ export default {
       minDate: new Date(2022, 6, 26),
       value: [],
       filter: '',
-
+      find: [],
+      example: {
+        mode: 'tags',
+        placeholder: 'Select employees',
+        closeOnSelect: false,
+        searchable: true,
+        trackBy: 'value',
+        label: 'value',
+        object: true,
+        groups: true,
+        value: [],
+      },
     }
   },
   created() {
-    this.value[0] = this.minDate;
-    this.value[1] = new Date();
     let startDate = new Date(2022, 6, 26);
     let currentDate = new Date();
     let start_day = ("0" + startDate.getDate()).slice(-2);
@@ -111,11 +112,21 @@ export default {
     let start = start_day+'-'+start_month+'-'+start_year;
     let finish = finish_day+'-'+finish_month+'-'+finish_year;
     this.$parent.getList(start, finish);
+    this.value[0] = start;
+    this.value[1] = finish;
+    this.$parent.getParticipant();
 
+  },
+  mounted() {
+    // this.users = this.$parent.participants;
   },
   methods:{
     test(){
-      this.$parent.getList(this.value[0], this.value[1]);
+      if (this.example.value.length > 0){
+        this.$parent.getList(this.value[0], this.value[1]);
+      } else {
+        this.$parent.getList(this.value[0], this.value[1], this.example.value);
+      }
     }
   }
 }
@@ -126,6 +137,31 @@ export default {
   padding: 10px 3%;
 }
 .drop-downbox{
-  color: red;
+  /*color: red;*/
+}
+.modal-body{
+  margin: 0 auto;
+}
+.dp__theme_light{
+  /*background: #0d6efd !important;*/
+  /*--dp-primary-color: red;*/
+}
+.multiselect-blue{
+  --ms-border-color: #D1D5DB;
+  --ms-tag-bg: #DBEAFE;
+  --ms-tag-color: #2563EB;
+  /*--ms-group-label-bg-selected: red;*/
+  --ms-group-label-bg: #E5E7EB;
+  --ms-group-label-color: #374151;
+  --ms-group-label-bg-pointed: #D1D5DB;
+  --ms-group-label-color-pointed: #374151;
+  --ms-group-label-bg-disabled: #F3F4F6;
+  --ms-group-label-color-disabled: #D1D5DB;
+  --ms-group-label-bg-selected: #0d6efd;
+  --ms-group-label-color-selected: #FFFFFF;
+  --ms-group-label-bg-selected-pointed: #0d6efd;
+  --ms-group-label-color-selected-pointed: #FFFFFF;
+  --ms-group-label-bg-selected-disabled: #6aa5ff;
+  --ms-group-label-color-selected-disabled: #6aa5fc;
 }
 </style>
