@@ -22,7 +22,7 @@ class Participants(models.Model):
 
 
 class ListEmails(models.Model):
-    user = models.ForeignKey(Participants, on_delete=models.CASCADE)
+    user = models.ForeignKey(Participants, related_name='participant', on_delete=models.CASCADE)
     email = models.EmailField(max_length=254)
 
     # @admin.display
