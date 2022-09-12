@@ -8,7 +8,7 @@ import pandas
 from datetime import datetime
 
 from aggregated.models import Participants, ListEmails, Aggregate, Lessons
-from aggregated.serializers import AggregateSerializer
+from aggregated.serializers import AggregateSerializer, ParticipantSerializer
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -110,6 +110,11 @@ def parsingFile(request):
     insert_db(all_data)
     return HttpResponse("Hello, world. You're at the polls index.")
 
+
+def ParticipantsList(request):
+    query = Participants.objects.all().order_by('Name')
+    serializer = ParticipantSerializer(instance=query, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
