@@ -13,16 +13,12 @@ class ListEmailsSerializer(serializers.ModelSerializer):
         return ListEmails.objects.all()
 
 class ParticipantSerializer(serializers.ModelSerializer):
-    # emails = serializers.StringRelatedField(many=True)
-    # emails = ListEmailsSerializer(many=True, read_only=True)
-
-    # emails = serializers.StringRelatedField()
     participant = serializers.StringRelatedField(many=True)
 
 
     class Meta:
         model = Participants
-        fields = ['Name', 'participant']
+        fields = ['id', 'Name', 'status', 'participant']
 
 
 class AggregateSerializer(serializers.ModelSerializer):
