@@ -14,11 +14,11 @@ class ListEmailsSerializer(serializers.ModelSerializer):
 
 class ParticipantSerializer(serializers.ModelSerializer):
     participant = serializers.StringRelatedField(many=True)
-
+    value = serializers.CharField(source='Name')
 
     class Meta:
         model = Participants
-        fields = ['id', 'Name', 'status', 'participant']
+        fields = ['id', 'value', 'status', 'participant']
 
 
 class AggregateSerializer(serializers.ModelSerializer):
