@@ -47,8 +47,8 @@ export default {
       })
     },
     formatCurrency(value) {
-      console.log("value");
-      console.log(value);
+      // console.log("value");
+      // console.log(value);
       return value+'!!!date'
     }
   }
@@ -86,6 +86,7 @@ table.scroll{
   max-width: 2500px;
   margin: 0 auto;
   margin-top: 6%;
+  margin-bottom: 6%;
   box-shadow: 0 10px 28px rgba(0,0,0,0.5), 0 10px 10px rgba(0,0,0,0.4);
   text-align: center;
   border-radius: 7px;
