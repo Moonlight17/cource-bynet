@@ -136,7 +136,7 @@ def allListBetweenDate(from_date_pr, to_date_pr):
 
 def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
     data = request.data
-    print("POST:   ", data['need'])
+    # print("POST:   ", data['need'])
     # print(data.getlist('need'))
     try:
         need = data['need']
@@ -147,7 +147,7 @@ def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
         status = data['status']
     except:
         status = None
-    print(need)
+    # print(need)
     # need = [7, 69, 82]
     if need:
         query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant_id__in=need).order_by(
@@ -176,8 +176,8 @@ def my_date_view(request, from_date, to_date):
     from_date_pr = datetime.strptime(from_date, '%d-%m-%Y').date()
     to_date_pr = datetime.strptime(to_date, '%d-%m-%Y').date()
 
-    print(from_date_pr)
-    print(to_date_pr)
+    # print(from_date_pr)
+    # print(to_date_pr)
 
     if request.method == 'GET':
         query = allListBetweenDate(from_date_pr, to_date_pr)
