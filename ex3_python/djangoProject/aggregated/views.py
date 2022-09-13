@@ -13,6 +13,10 @@ from aggregated.serializers import AggregateSerializer, ParticipantSerializer
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
+
+
 
 # VARIABLES
 path = ""
@@ -131,11 +135,11 @@ def allListBetweenDate(from_date_pr, to_date_pr):
 
 
 def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
-    data = request.POST
-    print("POST:   ", data)
-    print(data.getlist('need'))
+    data = request.data
+    print("POST:   ", data['need'])
+    # print(data.getlist('need'))
     try:
-        need = data.getlist('need')
+        need = data['need']
     except:
         need = None
 
@@ -155,7 +159,8 @@ def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
     # query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr)).order_by('date')
     return query
 
-
+@api_view(['GET', 'POST'])
+@permission_classes((permissions.AllowAny,))
 @csrf_exempt
 def my_date_view(request, from_date, to_date):
     # ===
@@ -199,7 +204,7 @@ def my_date_view(request, from_date, to_date):
                 # print(date)
                 result[item.participant.Name]['lessons'][date.meet_date.strftime('%d %B').lstrip("0")] = {'time': 0, 'status': date.status}
             result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")]['time'] = item.time_on_less
-
+    print(result)
     return JsonResponse(result, safe=False)
 
 # def getNameandDept(request, salary):
