@@ -44,7 +44,9 @@ export default {
     // console.log(this.BASE_URL);
   },
   methods: {
-    getList(day_start, day_finish, need=false) {
+    getList(day_start, day_finish, need) {
+      if (need == undefined) need = false;
+      // console.log('need', need);
       let url = 'http://' + this.home_url + ':8000/aggregate/'+day_start+'/'+day_finish+'/';
       if(!need) {
       this.axios.get(url).then((response) => {
@@ -53,14 +55,17 @@ export default {
         this.aggregates = response.data
       })} else {
         let ids = [];
-        for (let item in need){
-          ids.push(item.id)
+        for (let key in need){
+          ids.push(need[key]['id'])
+          // console.log(key)
         }
-        const article = { 'need': ids };
-        this.axios.post(url, article).then((response) => {
-          this.participants = response.data
+        const users = { 'need': ids };
+        this.axios.post(url, users).then((response) => {
+          this.dates = response.data['dates']
+          delete response.data['dates'];
+          this.aggregates = response.data
         })
-        console.log("test", need);
+        // console.log("test", ids);
       }
     },
     getParticipant() {
@@ -83,6 +88,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  min-height: 100vh;
   color: #2c3e50;
   /*background-image: "./";*/
   /*margin-top: 60px;*/
