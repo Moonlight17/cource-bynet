@@ -2,7 +2,7 @@
   <div id="navigbar">
     <nav class="navbar navbar-expand-md bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" id="logotype" href="#"><img alt="Logo" src="../assets/Logotype.png"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -33,6 +33,7 @@
             </div>
             <div class="modal-body">
               <MultiSelect
+                  v-model="example.value"
                   v-bind="example"
                   :options="users"
                   class="multiselect-blue"
@@ -122,9 +123,10 @@ export default {
   },
   methods:{
     test(){
-      if (this.example.value.length > 0){
+      if (this.example.value.length == 0){
         this.$parent.getList(this.value[0], this.value[1]);
       } else {
+        // console.log(this.example.value)
         this.$parent.getList(this.value[0], this.value[1], this.example.value);
       }
     }
@@ -133,6 +135,12 @@ export default {
 </script>
 
 <style scoped>
+#logotype{
+  width: 10%;
+}
+#logotype img{
+  width: 100%;
+}
 .nav{
   padding: 10px 3%;
 }
