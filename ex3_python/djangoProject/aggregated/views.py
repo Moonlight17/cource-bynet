@@ -204,7 +204,7 @@ def my_date_view(request, from_date, to_date):
                 # print(date)
                 result[item.participant.Name]['lessons'][date.meet_date.strftime('%d %B').lstrip("0")] = {'time': 0, 'status': date.status}
             result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")]['time'] = item.time_on_less
-    print(result)
+    # print(result)
     return JsonResponse(result, safe=False)
 
 # def getNameandDept(request, salary):
