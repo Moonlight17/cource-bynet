@@ -4,6 +4,7 @@ import json
 import os
 import difflib
 import pandas
+import pysftp
 
 from datetime import datetime
 
@@ -71,9 +72,9 @@ def select_date(date_time_str):
     date_time_str = date_time_str[2:-1]
     date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
     if (date_time_obj.weekday() == 1):
-        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of")
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of", durations=6)
     else:
-        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On")
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On", durations=3)
     return date_time_obj.date()
 
 
@@ -98,8 +99,23 @@ def read_csv(file):
         print("ERROR \n Where files?")
     return result, meeting_date
 
+# Function for downloading csv files from REMOTE_AWS_Machine
+def downloadFilesFromVM():
+    path = settings.ENV('REMOTE_FOLDER')
+    cinfo = {
+        'host': settings.ENV('REMOTE_HOST'),
+        'username': settings.ENV('REMOTE_USER'),
+        'password': settings.ENV('REMOTE_PASSWORD'),
+        'port': int(settings.ENV('REMOTE_PORT'))
+    }
+    sftp = pysftp.Connection(**cinfo)
+    sftp.get_d(path, 'Files', preserve_mtime=True)
+    sftp.close()    
+
+    
 
 def parsingFile(request):
+    downloadFilesFromVM()
     list_csv = finding_all_csv()
     data = {}
     all_data = {}
