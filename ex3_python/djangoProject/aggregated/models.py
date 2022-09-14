@@ -55,6 +55,7 @@ class Lessons(models.Model):
         Offline = 'Of', _('Offline')
 
     meet_date = models.DateField('Lessons', default=datetime.date.today)
+    durations = models.IntegerField("Lesson's Durations", default=0)
     status = models.CharField(max_length=2,
         choices=Status.choices,
         default=Status.Online,)
