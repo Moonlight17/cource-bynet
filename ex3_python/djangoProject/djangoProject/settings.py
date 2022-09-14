@@ -14,7 +14,7 @@ from pathlib import Path
 import environ
 import os
 
-env = environ.Env(
+ENV = environ.Env(
     # # set casting, default value
     # DEBUG=(bool, False)
 )
@@ -99,9 +99,11 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASS'),
+        'HOST': ENV('DATABASE_HOST'),
+        'PORT': ENV('DATABASE_PORT'),
+        'NAME': ENV('POSTGRES_NAME'),
+        'USER': ENV('POSTGRES_USER'),
+        'PASSWORD': ENV('POSTGRES_PASSWORD'),
     }
 }
 
