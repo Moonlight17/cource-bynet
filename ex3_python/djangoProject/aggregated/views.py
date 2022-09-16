@@ -202,8 +202,11 @@ def my_date_view(request, from_date, to_date):
 
     dates = Lessons.objects.filter(meet_date__range=(from_date_pr, to_date_pr)).order_by('meet_date')
     result['dates'] = []
+    all_time = 0
     for date in dates:
+        all_time = all_time + date.durations
         result['dates'].append({'date': date.meet_date.strftime('%d %B').lstrip("0"), 'status': date.status})
+    result['dates'].append(all_time)
     for item in query:
         # print(item)
         try:
@@ -213,7 +216,7 @@ def my_date_view(request, from_date, to_date):
         except KeyError:
             result[item.participant.Name] = {}
             result[item.participant.Name]['id'] = item.participant.id
-            result[item.participant.Name]['Name'] = item.participant.Name
+            result[item.participant.Name]['name'] = item.participant.Name
             result[item.participant.Name]['status'] = item.participant.status
             result[item.participant.Name]['lessons'] = {}
             for date in dates:
