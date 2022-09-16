@@ -24,7 +24,8 @@ export default {
     return {
       aggregates: [],
       dates: [],
-      home_url: 'localhost',
+      duration: 0,
+      home_url: 'localhost:8000',
       participants: [],
       sett: false,
     }
@@ -37,15 +38,27 @@ export default {
     // console.log(this.BASE_URL);
   },
   methods: {
+    changing(aggreg){
+      for (var user in aggreg){
+        aggreg[user]['all_time'] = 0;
+        for (var lesson in aggreg[user]['lessons']){
+          aggreg[user]['all_time'] = aggreg[user]['all_time'] + aggreg[user]['lessons'][lesson]['time'];
+        }
+      }
+      return aggreg
+    },
     getList(day_start, day_finish, need) {
       if (need == undefined) need = false;
       // console.log('need', need);
-      let url = 'http://' + this.home_url + ':8000/aggregate/'+day_start+'/'+day_finish+'/';
+      let url = 'http://' + this.home_url + '/aggregate/'+day_start+'/'+day_finish+'/';
       if(!need) {
       this.axios.get(url).then((response) => {
+        let last = (response.data['dates']).length - 1;
+        this.duraion = response.data['dates'][last] * 60;
+        response.data['dates'].splice(last, 1);
         this.dates = response.data['dates']
         delete response.data['dates'];
-        this.aggregates = response.data
+        this.aggregates = this.changing(response.data);
       })} else {
         let ids = [];
         for (let key in need){
@@ -56,13 +69,13 @@ export default {
         this.axios.post(url, users).then((response) => {
           this.dates = response.data['dates']
           delete response.data['dates'];
-          this.aggregates = response.data
+          this.aggregates = this.changing(response.data);
         })
         // console.log("test", ids);
       }
     },
     getParticipant() {
-      let url = 'http://' + this.home_url + ':8000/participants/';
+      let url = 'http://' + this.home_url + '/participants/';
 
         this.axios.get(url).then((response) => {
           this.participants = response.data
