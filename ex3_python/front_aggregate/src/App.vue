@@ -1,19 +1,11 @@
 <template>
-  <navigBlock :users="participants" />
-<!--  <img alt="Vue logo" src="./assets/logo.png">-->
-<!--  <h1>TEST</h1>-->
-  <aggregateTable :aggre="aggregates" :dates="dates" />
-<!--  <button-->
-<!--      class="btn btn-primary"-->
-<!--      data-bs-target="#collapseTarget"-->
-<!--      data-bs-toggle="collapse">-->
-<!--    Bootstrap collapse-->
-<!--  </button>-->
-  <div class="collapse py-2" id="collapseTarget">
-    <aggregateTable :aggre="aggregates" :dates="dates" />
+  <div :class="[sett ? 'light-fon' : 'dark-fon']">
+    <navigBlock :users="participants" :sett="sett" />
+    <aggregateTable :aggre="aggregates" :dates="dates" :sett="sett"/>
+    <div class="collapse py-2" id="collapseTarget">
+      <aggregateTable :aggre="aggregates" :dates="dates" />
+    </div>
   </div>
-<!--  <startPage msg="Welcome to Your Vue.js App"/>-->
-<!--  <pre>{{$data}}</pre>-->
 </template>
 
 <script>
@@ -34,6 +26,7 @@ export default {
       dates: [],
       home_url: 'localhost',
       participants: [],
+      sett: false,
     }
   },
   mounted() {
@@ -83,18 +76,31 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap');
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  min-height: 100vh;
-  color: #2c3e50;
   /*background-image: "./";*/
   /*margin-top: 60px;*/
+}
+.dark-fon{
+  min-height: 100vh;
+  color: #2c3e50;
+  background-image: url('assets/Fon3.jpeg');
+  background-attachment: fixed;
+  background-position: top center;
+  background-size: cover;
+  padding-bottom: 1px;
+}
+.light-fon{
+  min-height: 100vh;
+  color: #2c3e50;
   background-image: url('./assets/Fon2.jpeg');
   background-attachment: fixed;
   background-position: top center;
   background-size: cover;
+  padding-bottom: 1px;
 }
 </style>
