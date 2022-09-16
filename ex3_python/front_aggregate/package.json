@@ -15,7 +15,8 @@
     "bootstrap": "^5.2.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
-    "vue-axios": "^3.4.1"
+    "vue-axios": "^3.4.1",
+    "vue-simple-context-menu": "^4.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
