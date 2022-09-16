@@ -11,7 +11,7 @@
 <script>
 // import startPage from '@/components/startPage.vue'
 import aggregateTable from '@/components/aggregateTable.vue'
-import navigBlock from "@/components/navigbar";
+import navigBlock from "@/components/navigbar.vue";
 
 export default {
   name: 'App',
@@ -27,7 +27,7 @@ export default {
       duration: 0,
       home_url: 'localhost:8000',
       participants: [],
-      sett: false,
+      sett: true,
     }
   },
   mounted() {
