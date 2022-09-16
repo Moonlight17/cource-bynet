@@ -1,9 +1,9 @@
 <template>
   <div id="navigbar">
-    <nav class="navbar navbar-expand-md" :class="[sett ? 'navbar-light bg-light' : 'navbar-dark bg-dark']">
+    <nav class="navbar navbar-expand-md shad" :class="[sett ? 'navbar-light bg-light' : 'navbar-dark bg-dark']">
 <!--    <nav class="navbar navbar-expand-md">-->
       <div class="container-fluid">
-        <a class="navbar-brand" id="logotype" href="#">
+        <a class="navbar-brand" :class="[sett ? 'logo_light' : 'logo_dark']" id="logotype" href="#">
           Serov
 <!--          <img alt="Logo" src="../assets/Logotype.png">-->
         </a>
@@ -19,7 +19,10 @@
 <!--              <a class="nav-link disabled">Disabled</a>-->
 <!--            </li>-->
           </ul>
-          <form class="d-flex" role="search">
+          <form class="d-flex nav-form" role="search">
+            <transition name="no-mode-fade">
+              <svg @click="changeTheme(!sett)" :class="[sett ? 'dark-light' : 'dark-theme']" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mdi-theme-light-dark" viewBox="0 0 24 24"><path d="M7.5,2C5.71,3.15 4.5,5.18 4.5,7.5C4.5,9.82 5.71,11.85 7.53,13C4.46,13 2,10.54 2,7.5A5.5,5.5 0 0,1 7.5,2M19.07,3.5L20.5,4.93L4.93,20.5L3.5,19.07L19.07,3.5M12.89,5.93L11.41,5L9.97,6L10.39,4.3L9,3.24L10.75,3.12L11.33,1.47L12,3.1L13.73,3.13L12.38,4.26L12.89,5.93M9.59,9.54L8.43,8.81L7.31,9.59L7.65,8.27L6.56,7.44L7.92,7.35L8.37,6.06L8.88,7.33L10.24,7.36L9.19,8.23L9.59,9.54M19,13.5A5.5,5.5 0 0,1 13.5,19C12.28,19 11.15,18.6 10.24,17.93L17.93,10.24C18.6,11.15 19,12.28 19,13.5M14.6,20.08L17.37,18.93L17.13,22.28L14.6,20.08M18.93,17.38L20.08,14.61L22.28,17.15L18.93,17.38M20.08,12.42L18.94,9.64L22.28,9.88L20.08,12.42M9.63,18.93L12.4,20.08L9.87,22.27L9.63,18.93Z" /></svg>
+            </transition>
             <button type="button" class="btn" :class="[sett ? 'btn-outline-dark' : 'btn-outline-light']" data-bs-toggle="modal" data-bs-target="#exampleModal">Settings</button>
 <!--            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Settings</button>-->
           </form>
@@ -29,7 +32,7 @@
     </nav>
     <div>
     </div>
-      <div class="modal fade" :class="[sett ? 'color-dark' : 'color-light']"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" :class="[sett ? 'color-dark' : 'color-light']"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:1100;">
         <div class="modal-dialog modal-xl">
           <div class="modal-content" :class="[sett ? 'bg-light' : 'bg-dark']">
             <div class="modal-header">
@@ -67,7 +70,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="test(example.value);">Save changes</button>
+              <button type="button" class="btn" :class="[sett ? 'modal-footer-light btn-primary' : 'modal-footer-dark btn-outline-dark']" data-bs-dismiss="modal" @click="test(example.value);">Save changes</button>
             </div>
           </div>
         </div>
@@ -137,45 +140,63 @@ export default {
         // console.log(this.example.value)
         this.$parent.getList(this.value[0], this.value[1], this.example.value);
       }
+    }, changeTheme(newVal){
+      this.$parent
+.sett = newVal;
     }
   }
 }
 </script>
 
 <style>
+#navigbar{
+  /*box-shadow: 10px 0 5px -2px #888 inset;*/
+  position: fixed;
+  width: 100%;
+  z-index: 5000;
+  -webkit-appearance: none;
+}
+.shad{
+  box-shadow:  0px -9px 5px -7px #777777 inset;;
+  width: 100%;
+  z-index: 10;
+  -webkit-appearance: none;
+}
 .color-light{
   color:  var(--bs-light);
 }
 .color-dark{
   color:  var(--bs-dark);
 }
-/*.multiselect-dark {*/
-/*  --ms-bg: #454545;*/
-/*  --ms-tag-bg: #D1FAE5;*/
-/*  --ms-tag-color: #059669;*/
-/*  --ms-border-color: #00ff00;*/
-/*  --ms-placeholder-color: pink;*/
-/*  !*background-color: red;*!*/
-/*}*/
-/*div.multiselect-tags > div > input.multiselect-tags-search{*/
-/*  background-color: var(--ms-bg);*/
-/*}*/
-/*.multiselect input{*/
-/*  background-color: gold;*/
-/*}*/
-.multiselect{
+.multiselect-dark {
   --ms-placeholder-color: white;
-  --ms-tag-bg: #0d6efd;
+  --ms-tag-bg: gold;
+  --ms-tag-color: black;
   --ms-bg: #353535 !important;
   --ms-border-color: #727272;
+  --ms-ring-color: gold;
   --ms-dropdown-bg: #353535;
+  --ms-option-color-pointed: black !important;
+  --ms-option-color-selected-pointed: #FFFFFF;
+
+  --ms-option-bg-pointed: #555;
+  --ms-option-color-pointed: white !important;
+  --ms-option-color-selected: #FFFFFF;
+  --ms-group-label-bg-selected-pointed: gold;
+}
+.multiselect-light{
+  --ms-placeholder-color: black;
+  --ms-tag-bg: var(--bs-blue);
+  --ms-tag-color: white;
+  --ms-border-color: #727272;
+  --ms-ring-color: var(--bs-blue);
   --ms-option-color-pointed: white !important;
   --ms-option-color-selected-pointed: #FFFFFF;
 
-  --ms-option-bg-pointed: #FFFFFF;
+  --ms-option-bg-pointed: #aaa;
   --ms-option-color-pointed: black !important;
-  --ms-option-color-selected: #FFFFFF;
-  --ms-group-label-bg-selected-pointed: #0d6efd;
+  --ms-option-color-selected: #f0f;
+  --ms-group-label-bg-selected-pointed: var(--bs-blue);
 }
 
 input.multiselect-tags-search{
@@ -183,14 +204,45 @@ input.multiselect-tags-search{
 }
 .dp__theme_dark {
   --dp-background-color: #353535 !important;
-  --dp-primary-color: #0d6efd !important;
+  --dp-primary-color: gold !important;
   --dp-border-color: gold;
+}
+.modal-footer > .btn-outline-dark, .nav-form > .btn-outline-light{
+  --bs-btn-color: gold;
+  --bs-btn-border-color: gold;
+  --bs-btn-hover-color: black;
+  --bs-btn-hover-bg: gold;
+  --bs-btn-hover-border-color: gold;
+  --bs-btn-active-color: black;
+  --bs-btn-active-bg: gold;
+  --bs-btn-active-border-color: gold;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(255, 215, 0, 0.125);
+  --bs-btn-disabled-color: gold;
+  --bs-btn-disabled-border-color: gold;
+  --bs-gradient: none;
+}
+.dark-theme {
+  fill: gold;
+  margin-right: 2em;
+  width: 3rem;
+  height: 3rem;
+}
+.dark-light {
+  fill: black;
+  margin-right: 2em;
+  width: 3rem;
+  height: 3rem;
+}
+.logo_light{
+  color: black;
+}
+.logo_dark{
+  color: gold !important;
 }
 #logotype{
   width: 10%;
   font-family: 'Rubik Dirt', cursive;
   font-size: 2.3rem;
-  color: gold;
   padding: 0;
   margin: 0;
 }
@@ -220,4 +272,17 @@ input.multiselect-tags-search{
 /*  --ms-group-label-bg-selected-disabled: #6aa5ff;*/
 /*  --ms-group-label-color-selected-disabled: #6aa5fc;*/
 /*}*/
+.modal-footer-light{
+  /*--bs-btn-bg: */
+}
+.modal-footer-dark{
+  --bs-btn-bg: gold;
+}
+.no-mode-fade-enter-active, .no-mode-fade-leave-active {
+  transition: opacity .5s
+}
+
+.no-mode-fade-enter-from, .no-mode-fade-leave-to {
+  opacity: 0
+}
 </style>
