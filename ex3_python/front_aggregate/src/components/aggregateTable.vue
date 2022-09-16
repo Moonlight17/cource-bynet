@@ -81,9 +81,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.aggregateTable table{
+.aggregateTable{
+  margin-bottom: 6%;
 
-  margin: 0 auto;
+  /*margin: 0 auto;*/
+  padding-top: 10%;
 }
 h3 {
   margin: 40px 0 0;
@@ -104,14 +106,13 @@ table.scroll{
   position: relative;
   border-collapse: separate;
   border-spacing: 0;
+  margin: 0 auto;
 }
 .table_block{
   width: 80vw;
   min-width:400px;
   max-width: 2500px;
   margin: 0 auto;
-  margin-top: 6%;
-  margin-bottom: 6%;
   box-shadow: 0 10px 28px rgba(0,0,0,0.5), 0 10px 10px rgba(0,0,0,0.4);
   text-align: center;
   border-radius: 7px;
@@ -126,7 +127,7 @@ thead tr th:first-child {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 3;
 }
 /*td{  background-color: white !important;}*/
 th:nth-child(2), td:nth-child(2)
@@ -136,8 +137,6 @@ th:nth-child(2), td:nth-child(2)
   border-right: 1px solid whitesmoke;
   /*background-color: aliceblue;*/
 }
-
-Here is nice looking gradient from green to red
 
   /* Green - Yellow - Red */
 .gradient_0    {background: #57bb8a;}
