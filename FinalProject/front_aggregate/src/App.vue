@@ -25,7 +25,8 @@ export default {
       aggregates: [],
       dates: [],
       duration: 0,
-      home_url: 'localhost:8000',
+      home_url: process.env.VUE_APP_API_URL,
+      home_port: process.env.VUE_APP_API_PORT,
       participants: [],
       sett: true,
     }
@@ -50,7 +51,7 @@ export default {
     getList(day_start, day_finish, need) {
       if (need == undefined) need = false;
       // console.log('need', need);
-      let url = 'http://' + this.home_url + '/aggregate/'+day_start+'/'+day_finish+'/';
+      let url = 'http://' + this.home_url + ":" + this.home_port + '/aggregate/'+day_start+'/'+day_finish+'/';
       if(!need) {
       this.axios.get(url).then((response) => {
         let last = (response.data['dates']).length - 1;
@@ -75,7 +76,7 @@ export default {
       }
     },
     getParticipant() {
-      let url = 'http://' + this.home_url + '/participants/';
+      let url = 'http://' + this.home_url + ":" + this.home_port + '/participants/';
 
         this.axios.get(url).then((response) => {
           this.participants = response.data
