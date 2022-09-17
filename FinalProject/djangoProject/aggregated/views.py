@@ -5,6 +5,7 @@ import os
 import difflib
 import pandas
 import pysftp
+import paramiko
 
 from datetime import datetime
 
@@ -23,6 +24,26 @@ from rest_framework import permissions
 path = ""
 data = None
 pattern = "participant-*.csv"
+
+class My_Connection(pysftp.Connection):
+    def __init__(self, *args, **kwargs):
+        try:
+            if kwargs.get('cnopts') is None:
+                kwargs['cnopts'] = pysftp.CnOpts()
+        except pysftp.HostKeysException as e:
+            self._init_error = True
+            raise paramiko.ssh_exception.SSHException(str(e))
+        else:
+            self._init_error = False
+
+        self._sftp_live = False
+        self._transport = None
+        super().__init__(*args, **kwargs)
+
+    def __del__(self):
+        if not self._init_error:
+            self.close()
+
 
 
 # column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time',
@@ -101,15 +122,21 @@ def read_csv(file):
 
 # Function for downloading csv files from REMOTE_AWS_Machine
 def downloadFilesFromVM():
+    cnopts = pysftp.CnOpts()
+    cnopts.hostkeys = None
     path = settings.ENV('REMOTE_FOLDER')
     cinfo = {
         'host': settings.ENV('REMOTE_HOST'),
         'username': settings.ENV('REMOTE_USER'),
         'password': settings.ENV('REMOTE_PASSWORD'),
-        'port': int(settings.ENV('REMOTE_PORT'))
+        'port': int(settings.ENV('REMOTE_PORT')),
+        'cnopts': cnopts
     }
-    sftp = pysftp.Connection(**cinfo)
-    sftp.get_d(path, 'Files', preserve_mtime=True)
+    sftp = My_Connection(**cinfo)
+    try:
+        sftp.get_d(path, os.path.join(settings.BASE_DIR, 'csv_files'), preserve_mtime=True)
+    except OSError:
+        print("osEssor")
     sftp.close()    
 
     
