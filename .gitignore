@@ -22,8 +22,8 @@ FinalProject/djangoProject/Files/
 
 # Frontend---------------|
 .DS_Store
-node_modules
-/dist
+FinalProject/front_aggregate/node_modules
+FinalProject/front_aggregate/dist
 # local env files
 .env.local
 .env.*.local
@@ -32,14 +32,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.env*
+FinalProject/front_aggregate/.env
+FinalProject/front_aggregate/.env
 
-# Backend
+# Backend---------------|
 FinalProject/djangoProject/venv/
 FinalProject/djangoProject/djangoProject/.env
 FinalProject/djangoProject/aggregated/migrations/
 ex3_python/djangoProject/aggregated/migrations/0004_alter_participants_pub_date.py
 FinalProject/djangoProject/Files/
 
-# DataBase
+# DataBase---------------|
 FinalProject/data/
 FinalProject/djangoProject/csv_files/*.csv
