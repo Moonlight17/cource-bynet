@@ -117,9 +117,6 @@ table.scroll{
   text-align: center;
   border-radius: 7px;
 }
-thead{
-  border-bottom: 1px solid whitesmoke;
-}
 tr{
   white-space: nowrap;
 }
@@ -129,13 +126,23 @@ thead tr th:first-child {
   top: 0;
   z-index: 3;
 }
-/*td{  background-color: white !important;}*/
-th:nth-child(2), td:nth-child(2)
+.table-light > thead{
+  border-bottom: 1px solid black;
+}
+.table-dark > thead{
+  border-bottom: 1px solid whitesmoke;
+}
+.table-light > th:nth-child(2), .table-light td:nth-child(2)
+{
+  position:sticky;
+  left:0px;
+  border-right: 1px solid black;
+}
+.table-dark > th:nth-child(2), .table-dark td:nth-child(2)
 {
   position:sticky;
   left:0px;
   border-right: 1px solid whitesmoke;
-  /*background-color: aliceblue;*/
 }
 
   /* Green - Yellow - Red */
