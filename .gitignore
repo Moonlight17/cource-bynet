@@ -5,7 +5,7 @@
 .git*
 .idea/
 
-./hacathon(8200)/
+hacathon(8200)/
 *.ppt*
 *.doc*
 .idea/
@@ -15,9 +15,30 @@
 local_test_*
 
 FlaskProjectBynet/
-ex3_python/djangoProject/db.sqlite3
+FinalProject/djangoProject/db.sqlite3
 
-ex3_python/djangoProject/djangoProject/.env
-ex3_python/djangoProject/aggregated/migrations/
-ex3_python/data/
-ex3_python/djangoProject/Files/
+FinalProject/djangoProject/Files/
+
+
+# Frontend---------------|
+.DS_Store
+node_modules
+/dist
+# local env files
+.env.local
+.env.*.local
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Backend
+FinalProject/djangoProject/venv/
+FinalProject/djangoProject/djangoProject/.env
+FinalProject/djangoProject/aggregated/migrations/
+ex3_python/djangoProject/aggregated/migrations/0004_alter_participants_pub_date.py
+FinalProject/djangoProject/Files/
+
+# DataBase
+FinalProject/data/
