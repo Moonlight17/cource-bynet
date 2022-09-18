@@ -1,0 +1,53 @@
+pipeline {
+    environment {
+        registry_front = "moonlight234/bynet_attendance_front"
+        registry_back = "moonlight234/bynet_attendance_back"
+        path_dockerfile_front = "./FinalProject/front_aggregate"
+        path_dockerfile_back = "./FinalProject/djangoProject"
+        registryCredential = 'Docker'
+        // dockerImage = ''
+    }
+    agent any
+    stages {
+        stage('Cloning Git') {
+            steps {
+                git 'https://github.com/Moonlight17/cource-bynet.git'
+            }
+        }
+        stage('Building image Front') {
+            steps{
+                script {
+                    frontImage = docker.build(registry_front + ":latest",
+                    "-f ${path_dockerfile_front}/Dockerfile  ${path_dockerfile_front}"
+                    )
+                }
+            }
+        }
+        stage('Building image Back') {
+            steps{
+                script {
+                    backImage = docker.build(registry_back + ":latest",
+                    "-f ${path_dockerfile_back}/Dockerfile  ${path_dockerfile_back}"
+                    )
+                }
+            }
+        }
+        // stage('Testing image') {
+        //     steps{
+        //         script {
+        //         customImage = docker.build(registry + ":latest", "--network host .")
+        //         }
+        //     }
+        // }
+        stage('Deploy Image') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        frontImage.push();
+                        backImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
