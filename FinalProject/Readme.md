@@ -25,7 +25,7 @@ Download files from the server, parse them and write them to the database. Outpu
 * [x] Full data output from the database
 * [x] Ability to sort data by people
 * [x] Ability to sort data by date
-* [] Displaying information about a specific participant
+* [ ] Displaying information about a specific participant
 ---
 ## 🎞 [CI/CD](https://www.jenkins.io/doc/)
 *  [x] Start setting up the pipeline
