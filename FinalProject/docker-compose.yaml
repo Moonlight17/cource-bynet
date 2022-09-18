@@ -27,6 +27,7 @@ services:
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - DATABASE_HOST=db
             - DATABASE_PORT=${DATABASE_PORT}
+            - BACKEND_PORT=${BACKEND_PORT}
             - REMOTE_HOST=${REMOTE_HOST}
             - REMOTE_PORT=${REMOTE_PORT}
             - REMOTE_USER=${REMOTE_USER}
@@ -41,10 +42,13 @@ services:
             context: ./front_aggregate
             dockerfile: Dockerfile
         restart: always
+        volumes:
+            - "./nginx:/etc/nginx/conf.d/"
         ports:
             - 8080:80
         environment:
-            - VUE_APP_API_URL=backend
-            - VUE_APP_API_PORT=${VUE_APP_API_PORT}
+            - BACKEND_PORT=${BACKEND_PORT}
+            # - VUE_APP_API_URL=backend
+            # - VUE_APP_API_PORT=${VUE_APP_API_PORT}
         depends_on:
             - backend
