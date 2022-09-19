@@ -25,7 +25,7 @@ services:
             - POSTGRES_NAME=${POSTGRES_NAME}
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - DATABASE_HOST=db
+            - DATABASE_HOST=${DATABASE_HOST}
             - DATABASE_PORT=${DATABASE_PORT}
             - BACKEND_PORT=${BACKEND_PORT}
             - REMOTE_HOST=${REMOTE_HOST}
