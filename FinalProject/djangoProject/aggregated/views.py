@@ -88,7 +88,7 @@ def finding_all_csv():
             list_files.append(filename)
     return list_files
 
-
+# Function for (create and transorm) or transform date string
 def select_date(date_time_str):
     date_time_str = date_time_str[2:-1]
     date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
