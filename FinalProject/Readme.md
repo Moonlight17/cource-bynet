@@ -5,7 +5,7 @@
 
 ## 📍 Task:
 
-Download files from the server, parse them and write them to the database. Output data about the current attendance of classes.
+Download csv-files from the remote server, parse them, restructure data and write information to the database. Output data about the current attendance of classes.
 
 ---
 
@@ -35,10 +35,17 @@ Download files from the server, parse them and write them to the database. Outpu
 * [x] [Frontend](https://hub.docker.com/repository/docker/moonlight234/bynet_attendance_front)
 ---
 
-## 🧬 IaC [Terraform](https://aws.amazon.com/)
+## 🧬 IaC [Terraform](https://terraform.io/)
+* [ ] Create playbook for EKS
+* [ ] Create playbook for RDS
+* [ ] Create playbook for VPC
+* [ ] Group all wrote playbooks in alone big playbook
 ---
 
 ## ⛅️ Cloud [AWS](https://aws.amazon.com/)
+* [ ] Use EKS as main Kubernetes Cluster
+* [ ] Use RDS as main DataBase
+* [ ] Create 2 VPC (staging and production)
 
 ---
 
@@ -64,9 +71,9 @@ Download files from the server, parse them and write them to the database. Outpu
 ``` docker-compose --env-file .env.docker up --build ```
 ```bash
 # .env for docker-compose
-POSTGRES_PASSWORD=1q2w3e4r
-POSTGRES_USER=postgres
-POSTGRES_DB=postgres
+POSTGRES_PASSWORD=db_password
+POSTGRES_USER=dbusername
+POSTGRES_DB=name
 
 
 POSTGRES_NAME=name
@@ -79,4 +86,7 @@ REMOTE_PORT=22
 REMOTE_USER=username
 REMOTE_PASSWORD=password
 REMOTE_FOLDER=/var/tmp/csv_files
+
+DATABASE_HOST=db        # This env you can change on service for connect into Kubernetes Cluster 
+BACKEND_URL=backend     # This env you can change on service for connect into Kubernetes Cluster 
 ```
