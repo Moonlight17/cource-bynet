@@ -1,0 +1,10 @@
+# if you start with this NS, comment after start!
+# Because deleting can continue about 3 days#
+# DON'T DO IT!!!
+
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: bynet
+#   labels:
+#     name: bynet
