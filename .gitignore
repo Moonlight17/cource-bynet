@@ -46,3 +46,8 @@ FinalProject/djangoProject/Files/
 # DataBase---------------|
 FinalProject/data/
 FinalProject/djangoProject/csv_files/*.csv
+
+
+# Kubernetes-------------|
+FinalProject/Kubernetes/secret.yaml
+
