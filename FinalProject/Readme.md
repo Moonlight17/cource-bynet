@@ -90,3 +90,17 @@ REMOTE_FOLDER=/var/tmp/csv_files
 DATABASE_HOST=db        # This env you can change on service for connect into Kubernetes Cluster 
 BACKEND_URL=backend     # This env you can change on service for connect into Kubernetes Cluster 
 ```
+
+---
+# RoadMap
+* [ ] **Database**: AWS RDS
+
+* [ ] **IaC**: Terraform
+
+* [ ] **Orchestration**: EKS
+
+* [ ] **Quality Gate**: SonarKube
+
+* [x] **Scalability**: Horizontal Pod Autoscaling(HPA) in K8S
+
+* [ ] **Monitoring + Logging**: Grafana, Prometheus
