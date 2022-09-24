@@ -35,7 +35,7 @@ Download csv-files from the remote server, parse them, restructure data and writ
 * [x] [Frontend](https://hub.docker.com/repository/docker/moonlight234/bynet_attendance_front)
 ---
 
-## 🧬 IaC [Terraform](https://terraform.io/)
+## 🧬 IaC ([Terraform](https://terraform.io/))
 * [ ] Create playbook for EKS
 * [ ] Create playbook for RDS
 * [ ] Create playbook for VPC
