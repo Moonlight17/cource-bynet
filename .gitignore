@@ -51,3 +51,6 @@ FinalProject/djangoProject/csv_files/*.csv
 # Kubernetes-------------|
 FinalProject/Kubernetes/secret.yaml
 
+
+# SonarQube-------------|
+FinalProject/SonarQube/
