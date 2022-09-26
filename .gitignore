@@ -54,3 +54,7 @@ FinalProject/Kubernetes/secret.yaml
 
 # SonarQube-------------|
 FinalProject/SonarQube/
+
+
+# Terraform-------------|
+FinalProject/Terraform/*_template/
