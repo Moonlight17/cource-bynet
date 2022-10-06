@@ -4,7 +4,8 @@
 <!--    <nav class="navbar navbar-expand-md">-->
       <div class="container-fluid">
         <a class="navbar-brand" :class="[sett ? 'logo_light' : 'logo_dark']" id="logotype" href="#">
-          Serov
+          Serov -
+          <span class="type">{{type}}</span>
 <!--          <img alt="Logo" src="../assets/Logotype.png">-->
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +101,7 @@ export default {
       find: [],
       example: {
         mode: 'tags',
-        placeholder: 'Select employees',
+        placeholder: 'Select visitor',
         closeOnSelect: false,
         searchable: true,
         trackBy: 'value',
@@ -109,6 +110,7 @@ export default {
         groups: true,
         value: [],
       },
+      type: process.env.VUE_APP_TYPE.toLowerCase(),
     }
   },
   created() {
@@ -237,6 +239,12 @@ input.multiselect-tags-search{
   color: black;
 }
 .logo_dark{
+  color: gold !important;
+}
+.logo_light > .type{
+  color: gray;
+}
+.logo_dark > .type{
   color: gold !important;
 }
 #logotype{
