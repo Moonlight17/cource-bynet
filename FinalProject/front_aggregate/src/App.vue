@@ -1,7 +1,7 @@
 <template>
   <div :class="[sett ? 'light-fon' : 'dark-fon']">
     <navigBlock :users="participants" :sett="sett" />
-    <aggregateTable :aggre="aggregates" :dates="dates" :sett="sett"/>
+    <aggregateTable :aggre="aggregates" :dates="dates" :sett="sett" :duration="duration"/>
     <div class="collapse py-2" id="collapseTarget">
       <aggregateTable :aggre="aggregates" :dates="dates" />
     </div>
@@ -40,13 +40,22 @@ export default {
   },
   methods: {
     changing(aggreg){
+      let res = [];
       for (var user in aggreg){
         aggreg[user]['all_time'] = 0;
         for (var lesson in aggreg[user]['lessons']){
           aggreg[user]['all_time'] = aggreg[user]['all_time'] + aggreg[user]['lessons'][lesson]['time'];
         }
+        aggreg[user]['duration'] = (aggreg[user]['all_time']/this.duration)*100;
+        if (aggreg[user]['duration'] > 99){
+          aggreg[user]['duration'] = '~ 100'
+        }else{
+          aggreg[user]['duration'] = aggreg[user]['duration'].toFixed(0)
+        }
+        res.push(aggreg[user]);
       }
-      return aggreg
+      res.sort((x, y) => x.name.localeCompare(y.name));
+      return res
     },
     getList(day_start, day_finish, need) {
       if (need == undefined) need = false;
@@ -54,7 +63,7 @@ export default {
       if(!need) {
       this.axios.get(url).then((response) => {
         let last = (response.data['dates']).length - 1;
-        this.duraion = response.data['dates'][last] * 60;
+        this.duration = response.data['dates'][last];
         response.data['dates'].splice(last, 1);
         this.dates = response.data['dates']
         delete response.data['dates'];
