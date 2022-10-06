@@ -58,3 +58,4 @@ FinalProject/SonarQube/
 
 # Terraform-------------|
 FinalProject/Terraform/*_template/
+FinalProject/Terraform/*/terraform.tfstate.backup
