@@ -89,13 +89,19 @@ def finding_all_csv():
     return list_files
 
 # Function for (create and transorm) or transform date string
-def select_date(date_time_str):
-    date_time_str = date_time_str[2:-1]
-    date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
+def select_date(date_time_str_start, date_time_str_end):
+    date_time_str_start = date_time_str_start[2:-1]
+    date_time_str_end = date_time_str_end[2:-1]
+    date_time_obj_start = datetime.strptime(date_time_str_start, '%Y-%m-%d %H:%M:%S')
+    date_time_obj_end = datetime.strptime(date_time_str_end, '%Y-%m-%d %H:%M:%S')
+    duration = date_time_obj_end - date_time_obj_start
+    duration_in_s = duration.total_seconds()
+    dur = divmod(duration_in_s, 60)[0]
+    date_time_obj = datetime.strptime(date_time_str_start, '%Y-%m-%d %H:%M:%S')
     if (date_time_obj.weekday() == 1):
-        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of", durations=6)
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of", defaults={'durations': dur-30})
     else:
-        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On", durations=3)
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On", defaults={'durations': dur-20})
     return date_time_obj.date()
 
 
@@ -110,7 +116,7 @@ def read_csv(file):
                              engine='python')
         # data = df[['Name']]
         # print("DFFFFF", df)
-        meeting_date = select_date(df.loc[0]['Meeting Start Time'])
+        meeting_date = select_date(df.loc[0]['Meeting Start Time'], df.loc[0]['Meeting End Time'])
         df[["Attendance Duration"]].replace(r' mins', '')
         df[[str(meeting_date)]] = df[["Attendance Duration"]].replace(regex=[r' mins$'], value='').astype(
             'int64')
