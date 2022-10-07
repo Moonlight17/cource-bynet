@@ -29,7 +29,7 @@ pattern = "participant-*.csv"
 
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
-@csrf_exempt
+@csrf_exempt     # Sensitive
 def add_data_by_default(request):
     fields_names = ['Name', 'status']
     fields_email = ['email', 'Name']
@@ -178,7 +178,7 @@ def downloadFilesFromVM():
     sftp.close()    
 
     
-
+@csrf_exempt
 def parsingFile(request):
     downloadFilesFromVM()
     list_csv = finding_all_csv()
@@ -195,7 +195,7 @@ def parsingFile(request):
     insert_db(all_data)
     return HttpResponse("Hello, world. You're at the polls index.")
 
-
+@csrf_exempt
 def ParticipantsList(request):
     # query = Participants.objects.all().order_by('Name')
     # serializer = ParticipantSerializer(instance=query, many=True)
@@ -205,7 +205,7 @@ def ParticipantsList(request):
     employers_ser = ParticipantSerializer(instance=employers, many=True)
     data=[{'label': 'Students', 'options': students_ser.data},{'label': 'Employers', 'options': employers_ser.data}]
     return JsonResponse(data, safe=False)
-
+@csrf_exempt
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
