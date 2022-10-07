@@ -37,28 +37,23 @@ pipeline {
                 }
             }
         }
-        stage('Scanning') {
+        stage('SonarQube Analysis') {
             when {
                 branch 'develop'
             }
-            steps {
-                sh """
-                echo "Building Artifact"
-                """
-
-                sh """
-                echo "Deploying Code"
-                """
-            }
-
+            environment {
+                SCANNER_HOME = tool 'Sonar'
+                PROJECT_NAME = "BynetBootcamp"
+              }
+              steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.java.binaries=build/classes/java/ \
+                    -Dsonar.projectKey=$PROJECT_NAME \
+                    -Dsonar.sources=.'''
+                }
+              }
         }
-        // stage('Testing image') {
-        //     steps{
-        //         script {
-        //         customImage = docker.build(registry + ":latest", "--network host .")
-        //         }
-        //     }
-        // }
         stage('Deploy Image') {
             steps{
                 script {
