@@ -26,7 +26,10 @@ data = None
 pattern = "participant-*.csv"
 
 # Function for add new participants with emails.
-@require_http_methods(["GET"])  # Sensitive
+
+@api_view(['GET', 'POST'])
+@permission_classes((permissions.AllowAny,))
+@csrf_exempt
 def add_data_by_default(request):
     fields_names = ['Name', 'status']
     fields_email = ['email', 'Name']
