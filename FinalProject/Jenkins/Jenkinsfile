@@ -5,19 +5,24 @@ pipeline {
         path_dockerfile_front = "./FinalProject/front_aggregate"
         path_dockerfile_back = "./FinalProject/djangoProject"
         registryCredential = 'Docker'
+        tag = "${env.BRANCH_NAME == "develop" ? ":dev-latest" : ":latest"}"
         // dockerImage = ''
     }
     agent any
     stages {
         stage('Cloning Git') {
             steps {
-                git 'https://github.com/Moonlight17/cource-bynet.git'
+                
+                git (
+                    // branch: 'develop',
+                    url: 'https://github.com/Moonlight17/cource-bynet.git'
+                )
             }
         }
         stage('Building image Front') {
             steps{
                 script {
-                    frontImage = docker.build(registry_front + ":latest",
+                    frontImage = docker.build(registry_front + tag,
                     "-f ${path_dockerfile_front}/Dockerfile  ${path_dockerfile_front}"
                     )
                 }
@@ -26,11 +31,26 @@ pipeline {
         stage('Building image Back') {
             steps{
                 script {
-                    backImage = docker.build(registry_back + ":latest",
+                    backImage = docker.build(registry_back + tag,
                     "-f ${path_dockerfile_back}/Dockerfile  ${path_dockerfile_back}"
                     )
                 }
             }
+        }
+        stage('Scanning') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                sh """
+                echo "Building Artifact"
+                """
+
+                sh """
+                echo "Deploying Code"
+                """
+            }
+
         }
         // stage('Testing image') {
         //     steps{
