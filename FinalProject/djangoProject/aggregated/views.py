@@ -49,7 +49,7 @@ def add_data_by_default(request):
     except OSError:
         print("ERROR \n Where files with Email data?")
 
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("Initializing data loaded successfully.")
 
 
 
