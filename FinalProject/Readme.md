@@ -99,7 +99,7 @@ BACKEND_URL=backend     # This env you can change on service for connect into Ku
 
 * [ ] **Orchestration**: EKS
 
-* [ ] **Quality Gate**: SonarKube
+* [x] **Quality Gate**: SonarKube
 
 * [x] **Scalability**: Horizontal Pod Autoscaling(HPA) in K8S
 
