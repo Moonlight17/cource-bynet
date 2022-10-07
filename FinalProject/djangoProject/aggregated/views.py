@@ -25,6 +25,34 @@ path = ""
 data = None
 pattern = "participant-*.csv"
 
+# Function for add new participants with emails.
+def add_data_by_default(request):
+    fields_names = ['Name', 'status']
+    fields_email = ['email', 'Name']
+    try:
+        df = pandas.read_csv('init_names.csv',
+                             encoding="utf-8",
+                             header=0,
+                             usecols=fields_names)
+        for row in df.iterrows():
+            Participants.objects.get_or_create(Name=row[1].Name, status=row[1].status)
+    except OSError:
+        print("ERROR \n Where files with Names data?")
+    try:
+        df = pandas.read_csv('init_emails.csv',
+                             encoding="utf-8",
+                             header=0,
+                             usecols=fields_email)
+        for row in df.iterrows():
+            # print(ListEmails.objects.get(user_id__Name=row[1].Name, email=row[1].email))
+            ListEmails.objects.get_or_create(user_id__Name=row[1].Name, email=row[1].email)
+    except OSError:
+        print("ERROR \n Where files with Email data?")
+
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+
+
 class My_Connection(pysftp.Connection):
     def __init__(self, *args, **kwargs):
         try:
