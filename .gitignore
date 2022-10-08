@@ -8,6 +8,7 @@
 hacathon(8200)/
 *.ppt*
 *.doc*
+*.pyc
 .idea/
 .DS_Store
 
