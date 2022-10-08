@@ -49,7 +49,7 @@ def add_data_by_default(request):
                              usecols=fields_email)
         for row in df.iterrows():
             # print(ListEmails.objects.get(user_id__Name=row[1].Name, email=row[1].email))
-            ListEmails.objects.get_or_create(user_id__Name=row[1].Name, email=row[1].email)
+            ListEmails.objects.create(user=Participants.objects.get(Name=row[1].Name), email=row[1].email)
     except OSError:
         print("ERROR \n Where files with Email data?")
 
