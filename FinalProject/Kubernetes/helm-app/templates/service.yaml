@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: {{ .Values.deployment.namespace }}-bynet-app
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: {{ .Values.deployment.namespace }}-bynet-app
+spec:
+  selector:
+    app: frontend
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    # nodePort: 31001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-service
+  name: postgres-service
+  namespace: {{ .Values.deployment.namespace }}-bynet-app
+spec:
+  externalName: {{ .Values.deployment.rdsendpoint }}
+  selector:
+    app: postgres-service
+  type: ExternalName
+status:
+  loadBalancer: {}
+
+---
+
