@@ -1,0 +1,2 @@
+helm install staging-diploma-app ./helm-app/ --values ./helm-app/staging.values.yaml
+helm install prod-diploma-app ./helm-app/ --values ./helm-app/prod.values.yaml
