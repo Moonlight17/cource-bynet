@@ -11,6 +11,6 @@ data:
   REMOTE_HOST: "185.164.16.144"
   REMOTE_PORT: "22"
   REMOTE_FOLDER: /var/tmp/csv_files
-  database_url: database-service
+  database_url: {{ .Values.deployment.rdsendpoint }}
   backend_url: backend-service
   front_type: PROD

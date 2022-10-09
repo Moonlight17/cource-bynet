@@ -154,54 +154,54 @@ spec:
               containerPort: 80
 ---
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: database-deployment
-  namespace: {{ .Values.deployment.namespace }}-bynet-app
-  labels:
-    app: database
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: database
-  template:
-    metadata:
-      labels:
-        app: database
-    spec:
-      containers:
-        - image: postgres:14-alpine
-          name: database
-          resources:
-            requests:
-              memory: "1536Mi"
-              cpu: "10m"
-            limits:
-              memory: "4096Mi"
-              cpu: "500m"
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: backend-secret
-                  key: postgres-user
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: backend-secret
-                  key: postgres-password
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-configmap
-                  key: POSTGRES_DB
-          ports:
-            - name: project-port
-              protocol: TCP
-              containerPort: 5432
----
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: database-deployment
+#   namespace: {{ .Values.deployment.namespace }}-bynet-app
+#   labels:
+#     app: database
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: database
+#   template:
+#     metadata:
+#       labels:
+#         app: database
+#     spec:
+#       containers:
+#         - image: postgres:14-alpine
+#           name: database
+#           resources:
+#             requests:
+#               memory: "1536Mi"
+#               cpu: "10m"
+#             limits:
+#               memory: "4096Mi"
+#               cpu: "500m"
+#           env:
+#             - name: POSTGRES_USER
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: backend-secret
+#                   key: postgres-user
+#             - name: POSTGRES_PASSWORD
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: backend-secret
+#                   key: postgres-password
+#             - name: POSTGRES_DB
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: backend-configmap
+#                   key: POSTGRES_DB
+#           ports:
+#             - name: project-port
+#               protocol: TCP
+#               containerPort: 5432
+# ---
 
 # apiVersion: autoscaling/v1
 # kind: HorizontalPodAutoscaler
