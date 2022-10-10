@@ -14,7 +14,7 @@ pipeline {
             steps {
                 
                 git (
-                    // branch: 'develop',
+                    branch: env.BRANCH_NAME,
                     url: 'https://github.com/Moonlight17/cource-bynet.git'
                 )
             }
