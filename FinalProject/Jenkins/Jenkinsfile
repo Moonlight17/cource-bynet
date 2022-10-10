@@ -58,10 +58,12 @@ pipeline {
         stage('Deploy Image') {
             steps{
                 script {
-                    docker.withRegistry( '', registryCredential ) {
-                        frontImage.push();
-                        backImage.push()
-                    }
+                    echo registry_front:tag
+                    echo registry_back:tag
+                    // docker.withRegistry( '', registryCredential ) {
+                    //     frontImage.push();
+                    //     backImage.push()
+                    // }
                 }
             }
         }
