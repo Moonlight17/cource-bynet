@@ -19,7 +19,11 @@ FlaskProjectBynet/
 FinalProject/djangoProject/db.sqlite3
 
 FinalProject/djangoProject/Files/
+
+# Presentation-----------|
 FinalProject/Presentation/Presentation.key
+FinalProject/Presentation/.$Bootcamp.drawio.bkp
+
 
 # Frontend---------------|
 .DS_Store
