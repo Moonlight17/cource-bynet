@@ -62,7 +62,7 @@ pipeline {
                     // echo registry_back:tag
                     sh ''' 
                         ls
-                        echo './FinalProject/djangoProject/aggregated/urls.py'
+                        cat ./FinalProject/djangoProject/aggregated/urls.py
                     '''
                     docker.withRegistry( '', registryCredential ) {
                         frontImage.push();
