@@ -44,15 +44,16 @@ pipeline {
             environment {
                 SCANNER_HOME = tool 'Sonar'
                 PROJECT_NAME = "BynetBootcamp"
-              }
-              steps {
+                PATH_TO_PROJECT = "./FinalProject"
+            }
+            steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner \
                     -Dsonar.java.binaries=build/classes/java/ \
                     -Dsonar.projectKey=$PROJECT_NAME \
-                    -Dsonar.sources=.'''
+                    -Dsonar.sources=$PATH_TO_PROJECT ''' 
                 }
-              }
+            }
         }
         stage('Deploy Image') {
             steps{
