@@ -58,12 +58,6 @@ pipeline {
         stage('Deploy Image') {
             steps{
                 script {
-                    // echo registry_front:tag
-                    // echo registry_back:tag
-                    sh ''' 
-                        ls
-                        cat ./FinalProject/djangoProject/aggregated/urls.py
-                    '''
                     docker.withRegistry( '', registryCredential ) {
                         frontImage.push();
                         backImage.push()
