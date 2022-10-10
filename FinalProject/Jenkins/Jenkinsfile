@@ -60,8 +60,10 @@ pipeline {
                 script {
                     // echo registry_front:tag
                     // echo registry_back:tag
-                    ls
-                    echo './FinalProject/djangoProject/aggregated/urls.py'
+                    sh ''' 
+                        ls
+                        echo './FinalProject/djangoProject/aggregated/urls.py'
+                    '''
                     docker.withRegistry( '', registryCredential ) {
                         frontImage.push();
                         backImage.push()
