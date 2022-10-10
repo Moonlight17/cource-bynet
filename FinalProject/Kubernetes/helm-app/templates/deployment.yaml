@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - image: {{ .Values.deployment.registryBackend }}{{ .Values.deployment.backTag }}
-          # imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: backend
           # resources:
           #   requests:
@@ -118,6 +118,7 @@ spec:
     spec:
       containers:
         - image: {{ .Values.deployment.registryFrontend }}{{ .Values.deployment.frontTag }}
+          imagePullPolicy: Always
           name: frontend
           resources:
             requests:
