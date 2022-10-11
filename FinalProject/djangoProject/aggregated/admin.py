@@ -1,10 +1,7 @@
 from django.contrib import admin
 
-from .models import *
+from .models import ListEmails, Participants, Aggregate
 
-# admin.site.register(ListEmails)
-# admin.site.register(Participants)
-# admin.site.register(Aggregate)
 
 
 @admin.register(Participants)
