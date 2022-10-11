@@ -76,6 +76,9 @@ export default {
         }
         const users = { 'need': ids };
         this.axios.post(url, users).then((response) => {
+          let last = (response.data['dates']).length - 1;
+          this.duration = response.data['dates'][last];
+          response.data['dates'].splice(last, 1);
           this.dates = response.data['dates']
           delete response.data['dates'];
           this.aggregates = this.changing(response.data);
