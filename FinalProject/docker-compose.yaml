@@ -5,8 +5,8 @@ services:
         image: postgres:14-alpine
 #        command: postgres -c listen_addresses='*'
         restart: always
-        volumes:
-            - ./data/db:/var/lib/postgresql/data
+        # volumes:
+        #     - ./data/db:/var/lib/postgresql/data
         ports: 
             - 5432:5432
         environment: 
