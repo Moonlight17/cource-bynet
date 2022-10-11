@@ -18,6 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 
+from django.views.decorators.http import require_http_methods
 
 
 # VARIABLES
@@ -27,9 +28,8 @@ pattern = "participant-*.csv"
 
 # Function for add new participants with emails.
 
-@api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
-@csrf_exempt     # Sensitive
+@require_GET
 def add_data_by_default(request):
     fields_names = ['Name', 'status']
     fields_email = ['email', 'Name']
@@ -174,7 +174,7 @@ def download_files_from_vm():
     sftp.close()    
 
     
-@csrf_exempt
+@require_http_methods(["GET"])
 def parsing_file(request):
     download_files_from_vm()
     list_csv = finding_all_csv()
@@ -192,7 +192,7 @@ def parsing_file(request):
     insert_db(all_data)
     return HttpResponse("Hello, world. You're at the polls index.")
 
-@csrf_exempt
+@require_http_methods(["GET"])
 def participants_list(request):
     students = Participants.objects.filter(status='ST').order_by('Name')
     employers = Participants.objects.filter(status='EM').order_by('Name')
@@ -200,7 +200,8 @@ def participants_list(request):
     employers_ser = ParticipantSerializer(instance=employers, many=True)
     data=[{'label': 'Students', 'options': students_ser.data},{'label': 'Employers', 'options': employers_ser.data}]
     return JsonResponse(data, safe=False)
-@csrf_exempt
+
+@require_GET
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -235,9 +236,8 @@ def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
 
     return query
 
-@api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
-@csrf_exempt
+@require_http_methods(["GET", "POST"])
 def my_date_view(request, from_date, to_date):
 
 
