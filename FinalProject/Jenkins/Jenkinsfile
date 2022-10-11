@@ -51,7 +51,9 @@ pipeline {
                     sh '''$SCANNER_HOME/bin/sonar-scanner \
                     -Dsonar.java.binaries=build/classes/java/ \
                     -Dsonar.projectKey=$PROJECT_NAME \
-                    -Dsonar.sources=$PATH_TO_PROJECT ''' 
+                    -Dsonar.sources=$PATH_TO_PROJECT \
+                    -Dsonar.coverage.exclusions=$PATH_TO_PROJECT \
+                    -Dsonar.projectVersion=$BUILD_NUMBER''' 
                 }
             }
         }
