@@ -41,9 +41,9 @@ export default {
   methods: {
     changing(aggreg){
       let res = [];
-      for (var user in aggreg){
+      for (let user in aggreg){
         aggreg[user]['all_time'] = 0;
-        for (var lesson in aggreg[user]['lessons']){
+        for (let lesson in aggreg[user]['lessons']){
           aggreg[user]['all_time'] = aggreg[user]['all_time'] + aggreg[user]['lessons'][lesson]['time'];
         }
         aggreg[user]['duration'] = (aggreg[user]['all_time']/this.duration)*100;
