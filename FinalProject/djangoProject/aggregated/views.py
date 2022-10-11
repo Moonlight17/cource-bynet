@@ -18,7 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_GET
+
 
 
 # VARIABLES
