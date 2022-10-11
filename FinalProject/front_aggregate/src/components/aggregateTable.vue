@@ -1,7 +1,8 @@
 <template>
   <div class="aggregateTable ">
     <div class="table_block table-responsive">
-      <table class="table scroll table-hover" :class="[sett ? 'table-light' : 'table-dark']">
+      
+      <table v-if="aggre.length" class="table scroll table-hover" :class="[sett ? 'table-light' : 'table-dark']">
         <thead>
         <tr>
           <th scope="col">#</th>
@@ -25,6 +26,9 @@
         </tr>
         </tbody>
       </table>
+      <div v-else class="alert alert-danger" role="alert" style="margin-bottom:0; font-size:2.4em;">
+        Сheck the correctness of the selected parameters or specify the fullness of the database!
+      </div>
     </div>
 <!--    <div style="height: 100vh;">-->
 <!--&lt;!&ndash;      <div>&ndash;&gt;-->
