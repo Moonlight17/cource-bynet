@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-    parameters {
-        string(name: 'environment', defaultValue: 'default', description: 'Workspace/environment file to use for deployment')
-        string(name: 'version', defaultValue: '', description: 'Version variable to pass to Terraform')
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-    }
+    // parameters {
+    //     string(name: 'environment', defaultValue: 'default', description: 'Workspace/environment file to use for deployment')
+    //     string(name: 'version', defaultValue: '', description: 'Version variable to pass to Terraform')
+    //     booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+    // }
     
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
@@ -64,7 +64,7 @@ pipeline {
                     terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ output -raw kubeconfig > ${PATH_APP}eksconfig
                     
                     echo "\nexport KuberConfig"
-                    export KUBECONFIG=${PATH_APP}/eksconfig 
+                    export KUBECONFIG=${PATH_APP}eksconfig 
 
 
                     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
