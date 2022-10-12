@@ -93,11 +93,11 @@ BACKEND_URL=backend     # This env you can change on service for connect into Ku
 
 ---
 # RoadMap
-* [ ] **Database**: AWS RDS
+* [x] **Database**: AWS RDS
 
-* [ ] **IaC**: Terraform
+* [x] **IaC**: Terraform
 
-* [ ] **Orchestration**: EKS
+* [x] **Orchestration**: EKS
 
 * [x] **Quality Gate**: SonarKube
 
