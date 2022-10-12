@@ -64,7 +64,7 @@ pipeline {
                     kubeconfig=`terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ output -raw kubeconfig`
                     
                     echo "\nexport KuberConfig"
-                    export KUBECONFIG=kubeconfig
+                    export KUBECONFIG=${kubeconfig}
 
 
                     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
