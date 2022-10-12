@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'environment', defaultValue: 'default', description: 'Workspace/environment file to use for deployment')
+        string(name: 'version', defaultValue: '', description: 'Version variable to pass to Terraform')
+        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+    }
+    
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        TF_IN_AUTOMATION      = '1'
+    }
+
+    stages {
+        stage('Cloning Git') {
+            steps {
+                git (
+                    branch: 'develop',
+                    url: 'https://github.com/Moonlight17/cource-bynet.git'
+                )
+            }
+        }
+        stage('Plan') {
+            steps {
+                sh 'terraform init'
+                sh 'terraform plan'
+                sh 'terraform output -raw kubeconfig'
+                // sh 'terraform init'
+            }
+        }
+    }
+}
+
+        
+        
+// pipeline {
+//     environment {
+//         tag = "${env.BRANCH_NAME == "develop" ? ":dev-latest" : ":latest"}"
+//         // dockerImage = ''
+//     }
+//     agent any
+//     stages {
+//         stage('Cloning Git') {
+//             steps {
+                
+//                 git (
+//                     branch: 'develop',
+//                     url: 'https://github.com/Moonlight17/cource-bynet.git'
+//                 )
+//             }
+//         }
+//         stage('Building image Front') {
+//             steps{
+//                 script {
+//                     frontImage = docker.build(registry_front + tag,
+//                     "-f ${path_dockerfile_front}/Dockerfile  ${path_dockerfile_front}"
+//                     )
+//                 }
+//             }
+//         }
+//         stage('Building image Back') {
+//             steps{
+//                 script {
+//                     backImage = docker.build(registry_back + tag,
+//                     "-f ${path_dockerfile_back}/Dockerfile  ${path_dockerfile_back}"
+//                     )
+//                 }
+//             }
+//         }
+//         stage('SonarQube Analysis') {
+//             when {
+//                 branch 'develop'
+//             }
+//             environment {
+//                 SCANNER_HOME = tool 'Sonar'
+//                 PROJECT_NAME = "BynetBootcamp"
+//                 PATH_TO_PROJECT = "./FinalProject"
+//             }
+//             steps {
+//                 withSonarQubeEnv('SonarQube') {
+//                     sh '''$SCANNER_HOME/bin/sonar-scanner \
+//                     -Dsonar.java.binaries=build/classes/java/ \
+//                     -Dsonar.projectKey=$PROJECT_NAME \
+//                     -Dsonar.sources=$PATH_TO_PROJECT \
+//                     -Dsonar.coverage.exclusions=$PATH_TO_PROJECT \
+//                     -Dsonar.projectVersion=$BUILD_NUMBER''' 
+//                 }
+//             }
+//         }
+//         stage('Deploy Image') {
+//             steps{
+//                 script {
+//                     docker.withRegistry( '', registryCredential ) {
+//                         frontImage.push();
+//                         backImage.push()
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
