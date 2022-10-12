@@ -27,4 +27,7 @@ output "kubeconfig" {
   value     = "${local.kubeconfig}"
   sensitive = true
 }
-
+resource "local_file" "kubeconfig" {
+    content  = ${local.kubeconfig}
+    filename = "kubeconfig_res"
+}
