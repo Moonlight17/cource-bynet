@@ -110,7 +110,7 @@ export default {
         groups: true,
         value: [],
       },
-      type: process.env.VUE_APP_TYPE.toLowerCase(),
+      type: 'Default',
     }
   },
   created() {
@@ -129,7 +129,7 @@ export default {
     this.value[0] = start;
     this.value[1] = finish;
     this.$parent.getParticipant();
-
+    this.type = process.env.VUE_APP_TYPE.toLowerCase();
   },
   mounted() {
     // this.users = this.$parent.participants;
