@@ -50,7 +50,7 @@ def add_data_by_default(request):
                              usecols=fields_email)
         for row in df.iterrows():
             # print(ListEmails.objects.get(user_id__Name=row[1].Name, email=row[1].email))
-            ListEmails.objects.create(user=Participants.objects.get(Name=row[1].Name), email=row[1].email)
+            ListEmails.objects.get_or_create(user=Participants.objects.get(Name=row[1].Name), email=row[1].email)
     except OSError:
         print("ERROR \n Where files with Email data?")
 
@@ -168,10 +168,16 @@ def download_files_from_vm():
         'cnopts': cnopts
     }
     sftp = MyConnection(**cinfo)
+    if os.path.exists(os.path.join(settings.BASE_DIR, 'csv_files')):
+        pass
+    else:
+        os.mkdir(os.path.join(settings.BASE_DIR, 'csv_files'))
+        print ("CREATED")
+
     try:
         sftp.get_d(path, os.path.join(settings.BASE_DIR, 'csv_files'), preserve_mtime=True)
-    except OSError:
-        print("osEssor")
+    except OSError as e:
+        print("osEssor: ", e)
     sftp.close()    
 
     
