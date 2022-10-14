@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 
-from django.views.decorators.http import require_http_methods, require_GET
+from django.views.decorators.http import require_http_methods, require_GET, require_POST
 
 
 
@@ -219,18 +219,23 @@ def allListBetweenDate(from_date_pr, to_date_pr):
 
 
 def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
-    data = request.data
+    print('_______________________________')
+    # print(request.body)
+    data = json.loads(request.body)
+    print(data)
+
+    print('_______________________________')
 
 
-    # try:
-    need = data['need']
-    # except:
-        # need = None
+    try:
+        need = data['need']
+    except KeyError:
+        need = None
 
-    # try:
-    status = data['status']
-    # except:
-    #     status = None
+    try:
+        status = data['status']
+    except KeyError:
+        status = None
 
 
     if need:
@@ -243,8 +248,9 @@ def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
 
     return query
 
+@api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
-@require_http_methods(["GET", "POST"])
+@csrf_exempt
 def my_date_view(request, from_date, to_date):
 
 
