@@ -70,7 +70,7 @@ pipeline {
                     
                     sh '''
                     
-                        RDSENDPOINT=`terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ output -raw rds_endpoint`
+                        RDSENDPOINT=`terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ output -raw ip`
 
 
                         sed -i "s/__RDS_ENDPOINT__/${RDSENDPOINT}/g" ${PATH_APP}helm-app/${tag}.values.yaml
