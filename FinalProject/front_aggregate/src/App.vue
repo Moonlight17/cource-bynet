@@ -100,6 +100,7 @@ export default {
       let url = this.prefix+'/init/';
       this.axios.get(url).then((response) => {
         console.log(response.data)
+        this.getParticipant();
         this.initting = false;
       })
     },
