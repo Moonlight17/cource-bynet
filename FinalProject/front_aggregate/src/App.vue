@@ -95,6 +95,14 @@ export default {
 
         })
     },
+    add_data(){
+      // this.initting = true;
+      let url = this.prefix+'/init/';
+      this.axios.get(url).then((response) => {
+        console.log(response.data)
+        this.initting = false;
+      })
+    },
   }
 }
 
