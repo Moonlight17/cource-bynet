@@ -4,7 +4,7 @@ server {
     location / {
         root   /usr/share/nginx/html;
     }
-    location /api/1/ {
+    location /backend/ {
         proxy_pass  http://${BACKEND_URL}:${BACKEND_PORT}/;
     }
 }
