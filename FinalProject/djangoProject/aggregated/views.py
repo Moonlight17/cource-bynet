@@ -53,7 +53,7 @@ def add_data_by_default(request):
             ListEmails.objects.get_or_create(user=Participants.objects.get(Name=row[1].Name), email=row[1].email)
     except OSError:
         print("ERROR \n Where files with Email data?")
-
+    parsing_file(request)
     return HttpResponse("Initializing data loaded successfully.")
 
 
@@ -222,7 +222,7 @@ def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
     print('_______________________________')
     # print(request.body)
     data = json.loads(request.body)
-    print(data)
+    # print(data)
 
     print('_______________________________')
 
