@@ -115,7 +115,7 @@ export default {
         groups: true,
         value: [],
       },
-      type: 'Default',
+      type: '',
     }
   },
   created() {
@@ -137,7 +137,13 @@ export default {
   },
   mounted() {
     // this.users = this.$parent.participants;
-    this.type = process.env.VUE_APP_TYPE.toLowerCase();
+    if(process.env.VUE_APP_TYPE){
+      this.type = process.env.VUE_APP_TYPE;
+    } else {
+      this.type = 'Debug'
+    }
+    
+    this.type = this.type.toLocaleLowerCase();
   },
   methods:{
     add_data(value){
@@ -277,7 +283,7 @@ input.multiselect-tags-search{
   height: 3rem;
 }
 .logo_light{
-  color: #0D6EFDFF;
+  color: black;
 }
 .logo_dark{
   color: white !important;
