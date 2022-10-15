@@ -1,6 +1,6 @@
 <template>
   <div :class="[sett ? 'light-fon' : 'dark-fon']">
-    <navigBlock :users="participants" :sett="sett" />
+    <navigBlock :users="participants" :sett="sett" :initting="initting"/>
     <aggregateTable :aggre="aggregates" :dates="dates" :sett="sett" :duration="duration"/>
     <div class="collapse py-2" id="collapseTarget">
       <aggregateTable :aggre="aggregates" :dates="dates" />
@@ -26,9 +26,10 @@ export default {
       dates: [],
       duration: 0,
       // prefix: 'http://localhost:8000',
-      prefix: '/api/1',
+      prefix: '/backend',
       participants: [],
       sett: true,
+      initting: false
     }
   },
   mounted() {
