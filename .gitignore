@@ -8,6 +8,7 @@
 hacathon(8200)/
 *.ppt*
 *.doc*
+*.pyc
 .idea/
 .DS_Store
 
@@ -18,7 +19,11 @@ FlaskProjectBynet/
 FinalProject/djangoProject/db.sqlite3
 
 FinalProject/djangoProject/Files/
+
+# Presentation-----------|
 FinalProject/Presentation/Presentation.key
+FinalProject/Presentation/.$Bootcamp.drawio.bkp
+
 
 # Frontend---------------|
 .DS_Store
@@ -50,4 +55,14 @@ FinalProject/djangoProject/csv_files/*.csv
 
 # Kubernetes-------------|
 FinalProject/Kubernetes/secret.yaml
+# FinalProject/eksconfig
+FinalProject/Kubernetes/eksconfig
 
+
+# SonarQube-------------|
+FinalProject/SonarQube/
+
+
+# Terraform-------------|
+FinalProject/Terraform/*_template/
+FinalProject/Terraform/*/terraform.tfstate.backup

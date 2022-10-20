@@ -13,3 +13,4 @@ data:
   REMOTE_FOLDER: /var/tmp/csv_files
   database_url: database-service
   backend_url: backend-service
+  front_type: PROD

@@ -16,12 +16,13 @@ spec:
         app: backend
     spec:
       containers:
-        - image: moonlight234/bynet_attendance_back:latest
+        - image: moonlight234/bynet_attendance_back:dev-latest
+          imagePullPolicy: Always
           name: backend
           # resources:
           #   requests:
-          #     memory: "6144Mi"
-          #     cpu: "500m"
+          #     memory: "170Mi"
+          #     cpu: "76m"
           #   limits:
           #     memory: "7168Mi"
           #     cpu: "1000m"
@@ -116,7 +117,8 @@ spec:
         app: frontend
     spec:
       containers:
-        - image: moonlight234/bynet_attendance_front:latest
+        - image: moonlight234/bynet_attendance_front:dev-latest
+          imagePullPolicy: Always
           name: frontend
           resources:
             requests:
@@ -142,6 +144,11 @@ spec:
                 configMapKeyRef:
                   name: backend-configmap
                   key: backend_url
+            - name: VUE_APP_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-configmap
+                  key: front_type
           ports:
             - name: project-port
               protocol: TCP

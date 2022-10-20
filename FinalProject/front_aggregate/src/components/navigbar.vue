@@ -4,7 +4,8 @@
 <!--    <nav class="navbar navbar-expand-md">-->
       <div class="container-fluid">
         <a class="navbar-brand" :class="[sett ? 'logo_light' : 'logo_dark']" id="logotype" href="#">
-          Serov
+          Serov -
+          <span class="type">{{type}}</span>
 <!--          <img alt="Logo" src="../assets/Logotype.png">-->
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +38,10 @@
           <div class="modal-content" :class="[sett ? 'bg-light' : 'bg-dark']">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Filters</h5>
+              <div  @click="add_data(true)" :class="[initting ? 'rot' : '']" class="init">
+                <svg v-if="sett" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"> <g><path style="fill:#0d6efd;" d="M14.519,304.842C6.502,304.842,0,298.34,0,290.323v-95.425C0,130.248,52.598,77.65,117.248,77.65h309.611c8.017,0,14.519,6.502,14.519,14.519s-6.502,14.519-14.519,14.519H117.248c-48.639,0-88.21,39.572-88.21,88.21v95.425C29.038,298.342,22.536,304.842,14.519,304.842z"/><path style="fill:#0d6efd;" d="M77.932,261.282c-8.017,0-14.519-6.502-14.519-14.519V194.9c0-29.182,24.653-53.835,53.835-53.835h164.556c8.017,0,14.519,6.502,14.519,14.519s-6.502,14.519-14.519,14.519H117.248c-13.211,0-24.797,11.586-24.797,24.797v51.863C92.451,254.78,85.95,261.282,77.932,261.282z"/> </g><polygon style="fill:#FFFFFF;" points="361.627,29.659 497.481,124.86 361.627,220.063 "/> <g><path style="fill:#0d6efd;" d="M361.625,234.582c-2.293,0-4.591-0.542-6.701-1.639c-4.804-2.5-7.817-7.466-7.817-12.88V29.657c0-5.414,3.013-10.38,7.817-12.88c4.803-2.502,10.6-2.12,15.034,0.99l135.853,95.203c3.878,2.718,6.187,7.155,6.187,11.89s-2.31,9.172-6.187,11.89l-135.853,95.201C367.472,233.696,364.555,234.582,361.625,234.582z M376.146,57.561v134.597l96.036-67.299L376.146,57.561z"/><path style="fill:#0d6efd;" d="M394.752,434.352H85.141c-8.017,0-14.519-6.502-14.519-14.519c0-8.017,6.502-14.519,14.519-14.519h309.611c48.639,0,88.21-39.572,88.21-88.21v-95.425c0-8.017,6.502-14.519,14.519-14.519S512,213.661,512,221.679v95.425C512,381.754,459.402,434.352,394.752,434.352z"/><path style="fill:#0d6efd;" d="M394.752,370.938H230.196c-8.017,0-14.519-6.502-14.519-14.519c0-8.017,6.502-14.519,14.519-14.519h164.556c13.211,0,24.797-11.586,24.797-24.797V265.24c0-8.017,6.502-14.519,14.519-14.519c8.017,0,14.519,6.502,14.519,14.519v51.863C448.587,346.284,423.932,370.938,394.752,370.938z"/> </g> <polygon style="fill:#FFFFFF;" points="150.372,482.344 14.519,387.142 150.372,291.94 "/><path style="fill:#0d6efd;" d="M150.373,496.863c-2.93,0-5.845-0.884-8.334-2.629L6.187,399.031C2.309,396.313,0,391.878,0,387.142 c0-4.736,2.31-9.172,6.187-11.89l135.853-95.201c4.436-3.109,10.229-3.49,15.034-0.99c4.804,2.5,7.817,7.466,7.817,12.88v190.405 c0,5.414-3.013,10.38-7.817,12.88C154.966,496.322,152.665,496.863,150.373,496.863z M39.818,387.142l96.036,67.3V319.844 L39.818,387.142z"/><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+                <svg v-else      id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"> <g><path style="fill:#FFFFFF;" d="M14.519,304.842C6.502,304.842,0,298.34,0,290.323v-95.425C0,130.248,52.598,77.65,117.248,77.65h309.611c8.017,0,14.519,6.502,14.519,14.519s-6.502,14.519-14.519,14.519H117.248c-48.639,0-88.21,39.572-88.21,88.21v95.425C29.038,298.342,22.536,304.842,14.519,304.842z"/><path style="fill:#FFFFFF;" d="M77.932,261.282c-8.017,0-14.519-6.502-14.519-14.519V194.9c0-29.182,24.653-53.835,53.835-53.835h164.556c8.017,0,14.519,6.502,14.519,14.519s-6.502,14.519-14.519,14.519H117.248c-13.211,0-24.797,11.586-24.797,24.797v51.863C92.451,254.78,85.95,261.282,77.932,261.282z"/> </g><polygon style="fill:#000000;" points="361.627,29.659 497.481,124.86 361.627,220.063 "/> <g><path style="fill:#FFFFFF;" d="M361.625,234.582c-2.293,0-4.591-0.542-6.701-1.639c-4.804-2.5-7.817-7.466-7.817-12.88V29.657c0-5.414,3.013-10.38,7.817-12.88c4.803-2.502,10.6-2.12,15.034,0.99l135.853,95.203c3.878,2.718,6.187,7.155,6.187,11.89s-2.31,9.172-6.187,11.89l-135.853,95.201C367.472,233.696,364.555,234.582,361.625,234.582z M376.146,57.561v134.597l96.036-67.299L376.146,57.561z"/><path style="fill:#FFFFFF;" d="M394.752,434.352H85.141c-8.017,0-14.519-6.502-14.519-14.519c0-8.017,6.502-14.519,14.519-14.519h309.611c48.639,0,88.21-39.572,88.21-88.21v-95.425c0-8.017,6.502-14.519,14.519-14.519S512,213.661,512,221.679v95.425C512,381.754,459.402,434.352,394.752,434.352z"/><path style="fill:#FFFFFF;" d="M394.752,370.938H230.196c-8.017,0-14.519-6.502-14.519-14.519c0-8.017,6.502-14.519,14.519-14.519h164.556c13.211,0,24.797-11.586,24.797-24.797V265.24c0-8.017,6.502-14.519,14.519-14.519c8.017,0,14.519,6.502,14.519,14.519v51.863C448.587,346.284,423.932,370.938,394.752,370.938z"/> </g> <polygon style="fill:#000000;" points="150.372,482.344 14.519,387.142 150.372,291.94 "/><path style="fill:#FFFFFF;" d="M150.373,496.863c-2.93,0-5.845-0.884-8.334-2.629L6.187,399.031C2.309,396.313,0,391.878,0,387.142 c0-4.736,2.31-9.172,6.187-11.89l135.853-95.201c4.436-3.109,10.229-3.49,15.034-0.99c4.804,2.5,7.817,7.466,7.817,12.88v190.405 c0,5.414-3.013,10.38-7.817,12.88C154.966,496.322,152.665,496.863,150.373,496.863z M39.818,387.142l96.036,67.3V319.844 L39.818,387.142z"/><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+              </div>
               <button type="button" :class="[sett ? '' : 'btn-close-white']" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -89,6 +94,7 @@ export default {
   props: {
     users: Array,
     sett: Boolean,
+    initting: Boolean,
   },
   data(){
     return{
@@ -100,7 +106,7 @@ export default {
       find: [],
       example: {
         mode: 'tags',
-        placeholder: 'Select employees',
+        placeholder: 'Select visitor',
         closeOnSelect: false,
         searchable: true,
         trackBy: 'value',
@@ -109,6 +115,7 @@ export default {
         groups: true,
         value: [],
       },
+      type: '',
     }
   },
   created() {
@@ -127,12 +134,24 @@ export default {
     this.value[0] = start;
     this.value[1] = finish;
     this.$parent.getParticipant();
-
   },
   mounted() {
     // this.users = this.$parent.participants;
+    if(process.env.VUE_APP_TYPE){
+      this.type = process.env.VUE_APP_TYPE;
+    } else {
+      this.type = 'Debug'
+    }
+    
+    this.type = this.type.toLocaleLowerCase();
   },
   methods:{
+    add_data(value){
+      if (!this.initting) {
+        this.$parent.initting = value;
+        this.$parent.add_data();
+      }
+    },
     test(){
       if (this.example.value.length == 0){
         this.$parent.getList(this.value[0], this.value[1]);
@@ -140,9 +159,9 @@ export default {
         // console.log(this.example.value)
         this.$parent.getList(this.value[0], this.value[1], this.example.value);
       }
-    }, changeTheme(newVal){
-      this.$parent
-.sett = newVal;
+    },
+    changeTheme(newVal){
+      this.$parent.sett = newVal;
     }
   }
 }
@@ -161,6 +180,34 @@ export default {
   width: 100%;
   z-index: 10;
   -webkit-appearance: none;
+}
+.init{
+  min-width: 2em;
+  margin-left: 0.7em;
+}
+div.rot {
+  animation: 1s linear 0s normal none infinite running rot;
+  -webkit-animation: 1s linear 0s normal none infinite running rot;
+  /*width: 100px;*/
+}
+@keyframes rot {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rot {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.filling{
+  fill: pink;
 }
 .color-light{
   color:  var(--bs-light);
@@ -183,6 +230,7 @@ export default {
   --ms-option-color-pointed: white !important;
   --ms-option-color-selected: #FFFFFF;
   --ms-group-label-bg-selected-pointed: gold;
+  --ms-group-label-bg-selected: #6c757d;
 }
 .multiselect-light{
   --ms-placeholder-color: black;
@@ -197,6 +245,7 @@ export default {
   --ms-option-color-pointed: black !important;
   --ms-option-color-selected: #f0f;
   --ms-group-label-bg-selected-pointed: var(--bs-blue);
+  --ms-group-label-bg-selected: #6c757d;
 }
 
 input.multiselect-tags-search{
@@ -237,6 +286,12 @@ input.multiselect-tags-search{
   color: black;
 }
 .logo_dark{
+  color: white !important;
+}
+.logo_light > .type{
+  color: var(--bs-blue);
+}
+.logo_dark > .type{
   color: gold !important;
 }
 #logotype{

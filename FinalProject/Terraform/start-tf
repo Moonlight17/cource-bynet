@@ -1,0 +1,21 @@
+cd VPC && terraform apply -auto-approve && cd ..
+cd RDS && terraform apply -auto-approve && cd ..
+cd EKS && terraform apply -auto-approve && cd ..
+
+echo "\nKuberConfig"
+cd EKS
+
+echo "\nCreate eksconfig"
+touch ../../Kubernetes/eksconfig
+
+echo "\nterraform output"
+terraform output -raw kubeconfig > ../../Kubernetes/eksconfig
+
+echo "\nexport KuberConfig"
+export KUBECONFIG=eksconfig 
+
+cd ../../Kubernetes
+
+echo "\nKuberctl"
+pwd
+# kubectl get node -o yaml

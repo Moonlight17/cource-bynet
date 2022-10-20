@@ -1,10 +1,12 @@
 <template>
   <div class="aggregateTable ">
     <div class="table_block table-responsive">
-      <table class="table scroll table-hover" :class="[sett ? 'table-light' : 'table-dark']">
+      
+      <table v-if="aggre.length" class="table scroll table-hover" :class="[sett ? 'table-light' : 'table-dark']">
         <thead>
         <tr>
           <th scope="col">#</th>
+          <th scope="col">%</th>
           <th scope="col">Name</th>
           <th scope="col" v-for="date in dates" :key="date.id">
             {{ date.date }}
@@ -13,8 +15,9 @@
         </tr>
         </thead>
         <tbody class="table-group-divider noselect">
-        <tr @contextmenu.prevent.stop="handleClick($event, item)" v-for="(item, name, index) in aggre" :key="item.id" >
-          <td>{{ index +1 }}</td>
+        <tr @contextmenu.prevent.stop="handleClick($event, item)" v-for="(item, name) in aggre" :key="item.id" >
+          <td>{{ name +1 }}</td>
+          <td>{{item.duration}}%</td>
           <td>{{item.name}}</td>
           <td v-for="less in item.lessons" :key="less.id" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Tooltip on top">
             <a data-toggle="tooltip" data-placement="top" :title="less.date">{{  less.time ? less.time : '---' }}</a>
@@ -23,6 +26,9 @@
         </tr>
         </tbody>
       </table>
+      <div v-else class="alert alert-danger" role="alert" style="margin-bottom:0; font-size:2.4em;">
+        Сheck the correctness of the selected parameters or specify the fullness of the database!
+      </div>
     </div>
 <!--    <div style="height: 100vh;">-->
 <!--&lt;!&ndash;      <div>&ndash;&gt;-->
@@ -55,8 +61,9 @@
 export default {
   name: 'aggregateTable',
   props: {
-    aggre: Object,
+    aggre: Array,
     dates: Array,
+    duration: Number,
     sett: Boolean,
   },
     data() {
@@ -69,7 +76,7 @@ export default {
   methods: {
     handleClick (event, item) {
       // this.$refs.vueSimpleContextMenu.showMenu(event, item);
-      console.log(item.id);
+      console.log(item);
     },
     optionClicked (event) {
       alert(JSON.stringify(event))
@@ -132,13 +139,13 @@ thead tr th:first-child {
 .table-dark > thead{
   border-bottom: 1px solid whitesmoke;
 }
-.table-light > th:nth-child(2), .table-light td:nth-child(2)
+.table-light th:nth-child(3), .table-light td:nth-child(3)
 {
   position:sticky;
   left:0px;
   border-right: 1px solid black;
 }
-.table-dark > th:nth-child(2), .table-dark td:nth-child(2)
+.table-dark th:nth-child(3), .table-dark td:nth-child(3)
 {
   position:sticky;
   left:0px;

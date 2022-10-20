@@ -18,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 
+from django.views.decorators.http import require_http_methods, require_GET, require_POST
+
 
 
 # VARIABLES
@@ -25,7 +27,38 @@ path = ""
 data = None
 pattern = "participant-*.csv"
 
-class My_Connection(pysftp.Connection):
+# Function for add new participants with emails.
+
+@permission_classes((permissions.AllowAny,))
+@require_GET
+def add_data_by_default(request):
+    fields_names = ['Name', 'status']
+    fields_email = ['email', 'Name']
+    try:
+        df = pandas.read_csv('init_names.csv',
+                             encoding="utf-8",
+                             header=0,
+                             usecols=fields_names)
+        for row in df.iterrows():
+            Participants.objects.get_or_create(Name=row[1].Name, status=row[1].status)
+    except OSError:
+        print("ERROR \n Where files with Names data?")
+    try:
+        df = pandas.read_csv('init_emails.csv',
+                             encoding="utf-8",
+                             header=0,
+                             usecols=fields_email)
+        for row in df.iterrows():
+            # print(ListEmails.objects.get(user_id__Name=row[1].Name, email=row[1].email))
+            ListEmails.objects.get_or_create(user=Participants.objects.get(Name=row[1].Name), email=row[1].email)
+    except OSError:
+        print("ERROR \n Where files with Email data?")
+    parsing_file(request)
+    return HttpResponse("Initializing data loaded successfully.")
+
+
+
+class MyConnection(pysftp.Connection):
     def __init__(self, *args, **kwargs):
         try:
             if kwargs.get('cnopts') is None:
@@ -46,8 +79,6 @@ class My_Connection(pysftp.Connection):
 
 
 
-# column_in_csv = ['Meeting Name', 'Meeting Start Time', 'Meeting End Time', 'Name', 'Attendee Email', 'Join Time',
-# 'Leave Time', 'Attendance Duration', 'Connection Type']
 
 
 def similarity(s1, s2):
@@ -72,7 +103,6 @@ def insert_db(data):
                 for mail in all_mails:
                     similarity(item, mail.email)
                 #     Need send notification in Slack each user
-                s = 0
             except Participants.DoesNotExist:
                 print("Participants...blya")
                 #     Need send notification in Slack Manager the project
@@ -82,23 +112,30 @@ def insert_db(data):
 # function for create list with csv's file
 def finding_all_csv():
     list_files = []
-    fileOfDirectory = os.listdir(os.path.join(settings.BASE_DIR, 'csv_files'))
-    for filename in fileOfDirectory:
+    file_of_directory = os.listdir(os.path.join(settings.BASE_DIR, 'csv_files'))
+    for filename in file_of_directory:
         if fnmatch.fnmatch(filename, pattern):
             list_files.append(filename)
     return list_files
 
 # Function for (create and transorm) or transform date string
-def select_date(date_time_str):
-    date_time_str = date_time_str[2:-1]
-    date_time_obj = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
+def select_date(date_time_str_start, date_time_str_end):
+    date_time_str_start = date_time_str_start[2:-1]
+    date_time_str_end = date_time_str_end[2:-1]
+    date_format='%Y-%m-%d %H:%M:%S'
+    date_time_obj_start = datetime.strptime(date_time_str_start, date_format)
+    date_time_obj_end = datetime.strptime(date_time_str_end, date_format)
+    duration = date_time_obj_end - date_time_obj_start
+    duration_in_s = duration.total_seconds()
+    dur = divmod(duration_in_s, 60)[0]
+    date_time_obj = datetime.strptime(date_time_str_start, date_format)
     if (date_time_obj.weekday() == 1):
-        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of", durations=6)
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="Of", defaults={'durations': dur-30})
     else:
-        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On", durations=3)
+        Lessons.objects.get_or_create(meet_date=date_time_obj.date(), status="On", defaults={'durations': dur-20})
     return date_time_obj.date()
 
-
+# Function for reading csv files
 def read_csv(file):
     meeting_date = datetime
     result = []
@@ -108,9 +145,7 @@ def read_csv(file):
                              sep="\t",
                              header=0,
                              engine='python')
-        # data = df[['Name']]
-        # print("DFFFFF", df)
-        meeting_date = select_date(df.loc[0]['Meeting Start Time'])
+        meeting_date = select_date(df.loc[0]['Meeting Start Time'], df.loc[0]['Meeting End Time'])
         df[["Attendance Duration"]].replace(r' mins', '')
         df[[str(meeting_date)]] = df[["Attendance Duration"]].replace(regex=[r' mins$'], value='').astype(
             'int64')
@@ -121,7 +156,7 @@ def read_csv(file):
     return result, meeting_date
 
 # Function for downloading csv files from REMOTE_AWS_Machine
-def downloadFilesFromVM():
+def download_files_from_vm():
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
     path = settings.ENV('REMOTE_FOLDER')
@@ -132,17 +167,23 @@ def downloadFilesFromVM():
         'port': int(settings.ENV('REMOTE_PORT')),
         'cnopts': cnopts
     }
-    sftp = My_Connection(**cinfo)
+    sftp = MyConnection(**cinfo)
+    if os.path.exists(os.path.join(settings.BASE_DIR, 'csv_files')):
+        pass
+    else:
+        os.mkdir(os.path.join(settings.BASE_DIR, 'csv_files'))
+        print ("CREATED")
+
     try:
         sftp.get_d(path, os.path.join(settings.BASE_DIR, 'csv_files'), preserve_mtime=True)
-    except OSError:
-        print("osEssor")
+    except OSError as e:
+        print("osEssor: ", e)
     sftp.close()    
 
     
-
-def parsingFile(request):
-    downloadFilesFromVM()
+@require_http_methods(["GET"])
+def parsing_file(request):
+    download_files_from_vm()
     list_csv = finding_all_csv()
     data = {}
     all_data = {}
@@ -151,16 +192,15 @@ def parsingFile(request):
             data, date = read_csv(file)
             all_data[list(data.keys())[0]] = data[list(data.keys())[0]]
     else:
-        all_data['error'] = "ERROR \n Where files?"
-        return HttpResponse("ERROR \n Where files?")
+        text = 'ERROR \n Where files with attendence?'
+        all_data['error'] = text
+        return HttpResponse(text)
 
     insert_db(all_data)
     return HttpResponse("Hello, world. You're at the polls index.")
 
-
-def ParticipantsList(request):
-    # query = Participants.objects.all().order_by('Name')
-    # serializer = ParticipantSerializer(instance=query, many=True)
+@require_http_methods(["GET"])
+def participants_list(request):
     students = Participants.objects.filter(status='ST').order_by('Name')
     employers = Participants.objects.filter(status='EM').order_by('Name')
     students_ser = ParticipantSerializer(instance=students, many=True)
@@ -168,6 +208,7 @@ def ParticipantsList(request):
     data=[{'label': 'Students', 'options': students_ser.data},{'label': 'Employers', 'options': employers_ser.data}]
     return JsonResponse(data, safe=False)
 
+@require_GET
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -178,20 +219,25 @@ def allListBetweenDate(from_date_pr, to_date_pr):
 
 
 def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
-    data = request.data
-    # print("POST:   ", data['need'])
-    # print(data.getlist('need'))
+    print('_______________________________')
+    # print(request.body)
+    data = json.loads(request.body)
+    # print(data)
+
+    print('_______________________________')
+
+
     try:
         need = data['need']
-    except:
+    except KeyError:
         need = None
 
     try:
         status = data['status']
-    except:
+    except KeyError:
         status = None
-    # print(need)
-    # need = [7, 69, 82]
+
+
     if need:
         query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant_id__in=need).order_by(
             'date')
@@ -199,28 +245,22 @@ def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
         query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant__status=status).order_by(
             'date')
 
-    # query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr)).order_by('date')
+
     return query
 
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
 @csrf_exempt
 def my_date_view(request, from_date, to_date):
-    # ===
-    # or use strptime to get a date object.
-    # from_date_pr = datetime.strptime(from_date, '%Y-%m-%d').date()
-    # to_date_pr = datetime.strptime(to_date, '%Y-%m-%d').date()
-    # students = Participants.objects.filter(status=0)
-    # query = Aggregate.objects.filter(date__range=(from_date_pr, to_date_pr), participant__in=students)
-    # serializer = AggregateSerializer(query, many=True)
-    # ===
+
+
 
     result = {}
     from_date_pr = datetime.strptime(from_date, '%d-%m-%Y').date()
     to_date_pr = datetime.strptime(to_date, '%d-%m-%Y').date()
 
-    # print(from_date_pr)
-    # print(to_date_pr)
+
+
 
     if request.method == 'GET':
         query = allListBetweenDate(from_date_pr, to_date_pr)
@@ -235,9 +275,9 @@ def my_date_view(request, from_date, to_date):
         result['dates'].append({'date': date.meet_date.strftime('%d %B').lstrip("0"), 'status': date.status})
     result['dates'].append(all_time)
     for item in query:
-        # print(item)
+
         try:
-            # result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")] = item.time_on_less
+
             result[item.participant.Name]['lessons'][item.date.strftime('%d %B').lstrip("0")]['time'] = item.time_on_less
 
         except KeyError:
@@ -253,7 +293,3 @@ def my_date_view(request, from_date, to_date):
     # print(result)
     return JsonResponse(result, safe=False)
 
-# def getNameandDept(request, salary):
-#     users = User.objects.filter(salary__gt=salary)
-#
-#     return HttpResponse(serializer.serialize(users), mimetype='application/json')

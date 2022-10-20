@@ -24,9 +24,6 @@ class ParticipantSerializer(serializers.ModelSerializer):
 class AggregateSerializer(serializers.ModelSerializer):
     participant = ParticipantSerializer()
 
-    # Participant_Name = serializers.SerializerMethodField(source='Participant.Name')
-
-    # email = ListEmailsSerializer( many=True)
     class Meta:
         model = Aggregate
         fields = ('participant', 'time_on_less', 'date')

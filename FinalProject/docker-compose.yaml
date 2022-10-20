@@ -5,8 +5,8 @@ services:
         image: postgres:14-alpine
 #        command: postgres -c listen_addresses='*'
         restart: always
-        volumes:
-            - ./data/db:/var/lib/postgresql/data
+        # volumes:
+        #     - ./data/db:/var/lib/postgresql/data
         ports: 
             - 5432:5432
         environment: 
@@ -14,7 +14,7 @@ services:
           - POSTGRES_USER=${POSTGRES_USER}
           - POSTGRES_DB=${POSTGRES_DB}
     backend:
-        image: moonlight234/bynet_attendance_back:latest
+        image: moonlight234/bynet_attendance_back:dev-latest
         build:
             context: ./djangoProject
             dockerfile: Dockerfile
@@ -37,7 +37,7 @@ services:
         depends_on:
             - db
     web:
-        image: moonlight234/bynet_attendance_front:latest
+        image: moonlight234/bynet_attendance_front:dev-latest
         build:
             context: ./front_aggregate
             dockerfile: Dockerfile
@@ -47,6 +47,7 @@ services:
         environment:
             - BACKEND_PORT=${BACKEND_PORT}
             - BACKEND_URL=${BACKEND_URL}
+            - VUE_APP_TYPE=PROD
             # - VUE_APP_API_URL=backend
             # - VUE_APP_API_PORT=${VUE_APP_API_PORT}
         depends_on:

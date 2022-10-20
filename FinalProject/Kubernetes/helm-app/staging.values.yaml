@@ -1,0 +1,11 @@
+deployment:
+   registryBackend: "moonlight234/bynet_attendance_back:"
+   registryFrontend: "moonlight234/bynet_attendance_front:"
+   namespace: "staging"
+   rdsendpoint: __RDS_ENDPOINT__
+   frontTag: "dev-latest"
+   backTag: "dev-latest"
+   postgresUser: __POSTGRES_USER__
+   postgresPassword: __POSTGRES_PASSWORD__
+   remoteUser: __REMOTE_USER__
+   remotePassword: __REMOTE_PASSWORD__

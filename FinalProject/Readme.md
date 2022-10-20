@@ -35,7 +35,7 @@ Download csv-files from the remote server, parse them, restructure data and writ
 * [x] [Frontend](https://hub.docker.com/repository/docker/moonlight234/bynet_attendance_front)
 ---
 
-## 🧬 IaC [Terraform](https://terraform.io/)
+## 🧬 IaC ([Terraform](https://terraform.io/))
 * [ ] Create playbook for EKS
 * [ ] Create playbook for RDS
 * [ ] Create playbook for VPC
@@ -90,3 +90,17 @@ REMOTE_FOLDER=/var/tmp/csv_files
 DATABASE_HOST=db        # This env you can change on service for connect into Kubernetes Cluster 
 BACKEND_URL=backend     # This env you can change on service for connect into Kubernetes Cluster 
 ```
+
+---
+# RoadMap
+* [x] **Database**: AWS RDS
+
+* [x] **IaC**: Terraform
+
+* [x] **Orchestration**: EKS
+
+* [x] **Quality Gate**: SonarKube
+
+* [x] **Scalability**: Horizontal Pod Autoscaling(HPA) in K8S
+
+* [ ] **Monitoring + Logging**: Grafana, Prometheus

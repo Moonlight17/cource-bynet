@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-configmap
+  namespace: {{ .Values.deployment.namespace }}-bynet-app
+data:
+  POSTGRES_NAME: postgres
+  POSTGRES_DB: postgres
+  DATABASE_PORT: "5432"
+  BACKEND_PORT: "8000"
+  REMOTE_HOST: "185.164.16.144"
+  REMOTE_PORT: "22"
+  REMOTE_FOLDER: /var/tmp/csv_files
+  database_url: {{ .Values.deployment.rdsendpoint }}
+  backend_url: backend-service
+  front_type: PROD

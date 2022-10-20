@@ -10,12 +10,10 @@ class Participants(models.Model):
         Employer = 'EM', _('Employer')
 
     Name = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published', default=datetime.datetime.now(), blank=True)
+    pub_date = models.DateField("Date", default=datetime.date.today, blank=True)
     status = models.CharField(max_length=2,
         choices=Status.choices,
         default=Status.Student,)
-
-    # status = models.IntegerField("Status Participants (0-student; 1-employer)", default=0)
 
     def __str__(self):
         return self.Name
@@ -60,6 +58,5 @@ class Lessons(models.Model):
         choices=Status.choices,
         default=Status.Online,)
 
-    # status = models.IntegerField("Status Participants (0-student; 1-employer)", default=0)
 
 

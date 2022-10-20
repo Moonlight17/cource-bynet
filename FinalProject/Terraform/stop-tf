@@ -1,0 +1,3 @@
+cd EKS && terraform destroy -auto-approve && cd ..
+cd RDS && terraform destroy -auto-approve && cd ..
+cd VPC && terraform destroy -auto-approve && cd ..

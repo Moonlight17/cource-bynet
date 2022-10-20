@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+
+    // parameters {
+    //     string(name: 'environment', defaultValue: 'default', description: 'Workspace/environment file to use for deployment')
+    //     string(name: 'version', defaultValue: '', description: 'Version variable to pass to Terraform')
+    //     booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+    // }
+    
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_REGION            = credentials('AWS_REGION')
+        POSTGRES_USER         = credentials('postgresUser') 
+        POSTGRES_PASSWORD     = credentials('postgresPassword') 
+        REMOTE_USER           = credentials('remoteUser') 
+        REMOTE_PASSWORD       = credentials('remotePassword') 
+        TF_IN_AUTOMATION      = '1'
+        PATH_INFRASTRUCTURE   = "./FinalProject/Terraform/"
+        PATH_APP              = "./FinalProject/Kubernetes/"
+        tag                   = "${env.BRANCH_NAME == "develop" ? "staging" : "prod"}"
+    }
+
+    stages {
+        stage('Cloning Git') {
+            steps {
+                sh 'rm -rf *'
+                git (
+                    branch: env.BRANCH_NAME,
+                    url: 'https://github.com/Moonlight17/cource-bynet.git'
+                )
+                sh 'rm -rf ${PATH_INFRASTRUCTURE}/*/.terraform.lock.hcl'
+            }
+        }
+        stage('VPC') {
+            steps {
+                sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}VPC/main.tf'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}VPC/ init'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}VPC/ plan -input=false -out tfplan_VPC'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}VPC/ show -no-color tfplan_VPC > tfplan_VPC.txt'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}VPC/ apply -input=false tfplan_VPC'
+            }
+        }
+        stage('RDS') {
+            steps {
+                sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}RDS/main.tf'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ init'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ plan -input=false -out tfplan_RDS'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ show -no-color tfplan_RDS > tfplan_RDS.txt'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ apply -input=false tfplan_RDS'
+            }
+        }
+        stage('EKS') {
+            steps {
+                sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}EKS/main.tf'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ init'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ plan -input=false -out tfplan_EKS'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ show -no-color tfplan_EKS > tfplan_EKS.txt'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ apply -input=false tfplan_EKS'
+            }
+        }
+        stage('KUBER') {
+            steps {
+                    sh 'echo -------------------------------------------------------------------------------'
+                    sh '''
+                        CLUSTER_NAME=`terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ output -raw cluster_name`
+                        aws eks update-kubeconfig --name ${CLUSTER_NAME}
+                        kubectl apply -f ${PATH_APP}metrics/components.yaml
+                        '''
+                    
+                    sh '''
+                    
+                        RDSENDPOINT=`terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ output -raw ip`
+
+
+                        sed -i "s/__RDS_ENDPOINT__/${RDSENDPOINT}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__POSTGRES_USER__/${POSTGRES_USER}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__POSTGRES_PASSWORD__/${POSTGRES_PASSWORD}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__REMOTE_USER__/${REMOTE_USER}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__REMOTE_PASSWORD__/${REMOTE_PASSWORD}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+
+
+                        if [ "`helm list | grep ${tag} | wc -l`" -eq "1" ]; then
+                            helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
+                        else
+                            helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
+                        fi
+                '''
+            }
+        }
+    }
+}
