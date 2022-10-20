@@ -36,16 +36,16 @@ Download csv-files from the remote server, parse them, restructure data and writ
 ---
 
 ## 🧬 IaC ([Terraform](https://terraform.io/))
-* [ ] Create playbook for EKS
-* [ ] Create playbook for RDS
-* [ ] Create playbook for VPC
-* [ ] Group all wrote playbooks in alone big playbook
+* [x] Create playbook for EKS
+* [x] Create playbook for RDS
+* [x] Create playbook for VPC
+* [x] Group all wrote playbooks in alone big playbook
 ---
 
 ## ⛅️ Cloud [AWS](https://aws.amazon.com/)
-* [ ] Use EKS as main Kubernetes Cluster
-* [ ] Use RDS as main DataBase
-* [ ] Create 2 VPC (staging and production)
+* [x] Use EKS as main Kubernetes Cluster
+* [x] Use RDS as main DataBase
+* [x] Create 2 VPC (staging and production)
 
 ---
 
@@ -103,4 +103,4 @@ BACKEND_URL=backend     # This env you can change on service for connect into Ku
 
 * [x] **Scalability**: Horizontal Pod Autoscaling(HPA) in K8S
 
-* [ ] **Monitoring + Logging**: Grafana, Prometheus
+* [ ] ~~**Monitoring + Logging**: Grafana, Prometheus~~
