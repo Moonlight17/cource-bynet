@@ -140,7 +140,8 @@ export default {
     if(process.env.VUE_APP_TYPE){
       this.type = process.env.VUE_APP_TYPE;
     } else {
-      this.type = 'Debug'
+      console.log(process.env.VUE_APP_TYPE);
+      this.type = 'Debug';
     }
     
     this.type = this.type.toLocaleLowerCase();
