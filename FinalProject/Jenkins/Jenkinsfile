@@ -17,6 +17,9 @@ pipeline {
                     branch: env.BRANCH_NAME,
                     url: 'https://github.com/Moonlight17/cource-bynet.git'
                 )
+                sh '''
+                    sed -i "s/__TYPE_BUILD__/${env.BRANCH_NAME}/g" ${path_dockerfile_front}/src/components/navigbar.vue
+                '''
             }
         }
         stage('Building image Front') {
