@@ -74,7 +74,7 @@
 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" id="close_modal" data-bs-dismiss="modal">Close</button>
               <button type="button" class="btn" :class="[sett ? 'modal-footer-light btn-primary' : 'modal-footer-dark btn-outline-dark']" data-bs-dismiss="modal" @click="test(example.value);">Save changes</button>
             </div>
           </div>

@@ -101,6 +101,7 @@ export default {
       this.axios.get(url).then((response) => {
         console.log(response.data)
         this.getParticipant();
+        document.getElementById('close_modal').click();
         this.initting = false;
       })
     },
