@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <a class="navbar-brand" :class="[sett ? 'logo_light' : 'logo_dark']" id="logotype" href="#">
           Serov -
-          <span class="type">{{type}}</span>
+          <span class="type">{{type_build}}</span>
 <!--          <img alt="Logo" src="../assets/Logotype.png">-->
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,7 +115,7 @@ export default {
         groups: true,
         value: [],
       },
-      type: '',
+      type_build: '',
     }
   },
   created() {
@@ -137,14 +137,13 @@ export default {
   },
   mounted() {
     // this.users = this.$parent.participants;
-    if(process.env.VUE_APP_TYPE){
-      this.type = process.env.VUE_APP_TYPE;
+    if(process.env.VUE_APP_TYPE_BUILD){
+      this.type_build = process.env.VUE_APP_TYPE_BUILD;
     } else {
-      console.log(process.env.VUE_APP_TYPE);
-      this.type = 'Debug';
+      this.type_build = '__TYPE_BUILD__';
     }
     
-    this.type = this.type.toLocaleLowerCase();
+    this.type_build = this.type_build.toLocaleLowerCase();
   },
   methods:{
     add_data(value){
