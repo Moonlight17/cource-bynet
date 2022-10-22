@@ -39,7 +39,6 @@ yarn-error.log*
 pnpm-debug.log*
 .env*
 FinalProject/front_aggregate/.env
-FinalProject/front_aggregate/.env
 
 # Backend---------------|
 FinalProject/djangoProject/venv/
