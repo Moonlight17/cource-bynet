@@ -97,6 +97,8 @@ spec:
             - name: project-port
               protocol: TCP
               containerPort: 8000
+      nodeSelector:
+        environment: {{ .Values.deployment.namespace }}
 ---
 
 apiVersion: apps/v1
@@ -153,6 +155,8 @@ spec:
             - name: project-port
               protocol: TCP
               containerPort: 80
+      nodeSelector:
+        environment: {{ .Values.deployment.namespace }}
 ---
 
 # apiVersion: apps/v1

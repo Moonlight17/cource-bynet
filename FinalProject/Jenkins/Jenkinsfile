@@ -6,6 +6,7 @@ pipeline {
         path_dockerfile_back = "./FinalProject/djangoProject"
         registryCredential = 'Docker'
         tag = "${env.BRANCH_NAME == "develop" ? ":dev-latest" : ":latest"}"
+        type_build = "${env.BRANCH_NAME == "develop" ? "staging" : "production"}"
         // dockerImage = ''
     }
     agent any
@@ -22,6 +23,9 @@ pipeline {
         stage('Building image Front') {
             steps{
                 script {
+                    sh '''
+                        sed -i "s/__TYPE_BUILD__/${type_build}/g" ${path_dockerfile_front}/src/components/navigbar.vue
+                    '''
                     frontImage = docker.build(registry_front + tag,
                     "-f ${path_dockerfile_front}/Dockerfile  ${path_dockerfile_front}"
                     )

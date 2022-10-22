@@ -43,6 +43,7 @@ eks_managed_node_groups = {
       name = "node-group-1"
 
       instance_types = ["t3.micro"]
+      capacity_type  = "SPOT"
 
       desired_size = 2
       max_size     = 3
@@ -55,6 +56,9 @@ eks_managed_node_groups = {
       vpc_security_group_ids = [
         data.terraform_remote_state.vpc.outputs.nodes_sg
       ]
+      labels = {
+        environment = "staging"
+      }
     }
 
     two = {
@@ -65,9 +69,9 @@ eks_managed_node_groups = {
       capacity_type  = "SPOT"
       disk_size      = 20
 
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
+      min_size     = 2
+      max_size     = 4
+      desired_size = 2
 
       pre_bootstrap_user_data = <<-EOT
       echo 'foo bar'
@@ -76,6 +80,9 @@ eks_managed_node_groups = {
       vpc_security_group_ids = [
         data.terraform_remote_state.vpc.outputs.nodes_sg
       ]
+      labels = {
+        environment = "prod"
+      }
     }
   }
 }
