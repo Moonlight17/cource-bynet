@@ -56,6 +56,9 @@ FinalProject/djangoProject/csv_files/*.csv
 FinalProject/Kubernetes/secret.yaml
 # FinalProject/eksconfig
 FinalProject/Kubernetes/eksconfig
+FinalProject/Kubernetes/start-helm
+FinalProject/Kubernetes/helm-app/staging.values.yaml
+FinalProject/Kubernetes/helm-app/prod.values.yaml
 
 
 # SonarQube-------------|
