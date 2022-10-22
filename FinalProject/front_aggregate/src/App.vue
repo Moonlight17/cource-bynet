@@ -26,7 +26,8 @@ export default {
       dates: [],
       duration: 0,
       // prefix: 'http://localhost:8000',
-      prefix: '/backend',
+      // prefix: '/backend',
+      prefix: process.env.NODE_ENV === 'production' ? '/backend' : 'http://localhost:8000',
       participants: [],
       sett: true,
       initting: false
