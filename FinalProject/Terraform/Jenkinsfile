@@ -3,9 +3,14 @@ pipeline {
 
     parameters {
         string(
-            name: 'tag',
-            defaultValue: "${env.BRANCH_NAME == "develop" ? "staging" : "prod"}",
-            description: 'Which version of the app are we running?'
+            name: 'FRONT',
+            defaultValue: "${env.BRANCH_NAME == "develop" ? "dev-latest" : "latest"}",
+            description: 'Which version of the Frontend-app are we running?'
+        )
+        string(
+            name: 'BACK',
+            defaultValue: "${env.BRANCH_NAME == "develop" ? "dev-latest" : "latest"}",
+            description: 'Which version of the Backend-app are we running?'
         )
     }
     
@@ -75,12 +80,33 @@ pipeline {
                         RDSENDPOINT=`terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ output -raw ip`
 
 
-                        sed -i "s/__RDS_ENDPOINT__/${RDSENDPOINT}/g" ${PATH_APP}helm-app/${params.tag}.values.yaml
-                        sed -i "s/__POSTGRES_USER__/${POSTGRES_USER}/g" ${PATH_APP}helm-app/${params.tag}.values.yaml
-                        sed -i "s/__POSTGRES_PASSWORD__/${POSTGRES_PASSWORD}/g" ${PATH_APP}helm-app/${params.tag}.values.yaml
-                        sed -i "s/__REMOTE_USER__/${REMOTE_USER}/g" ${PATH_APP}helm-app/${params.tag}.values.yaml
-                        sed -i "s/__REMOTE_PASSWORD__/${REMOTE_PASSWORD}/g" ${PATH_APP}helm-app/${params.tag}.values.yaml
+                        sed -i "s/__RDS_ENDPOINT__/${RDSENDPOINT}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__POSTGRES_USER__/${POSTGRES_USER}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__POSTGRES_PASSWORD__/${POSTGRES_PASSWORD}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__REMOTE_USER__/${REMOTE_USER}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        sed -i "s/__REMOTE_PASSWORD__/${REMOTE_PASSWORD}/g" ${PATH_APP}helm-app/${tag}.values.yaml
                         
+                        echo 'check tag'
+                        echo "${FRONT}"
+                        echo "${BACK}"
+                        
+                        if [ 'dev-latest' = "${FRONT}" || 'latest' = "${FRONT}" ]; then
+                            echo "${FRONT}"
+                        else
+                            sed -i 's/frontTag: \\"dev-latest\\"/frontTag: __frontTAG__/g' ${PATH_APP}helm-app/${tag}.values.yaml
+                            
+                            sed -i "s/__frontTAG__/${FRONT}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        fi
+
+                        if [ 'dev-latest' = "${BACK}" || 'latest' = "${BACK}" ]; then
+                            echo "${BACK}"
+                        else
+                            sed -i 's/backTag: \\"dev-latest\\"/backTag: __backTAG__/g' ${PATH_APP}helm-app/${tag}.values.yaml
+                            
+                            sed -i "s/__backTAG__/${BACK}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        fi
+                        
+                        cat ${PATH_APP}helm-app/${tag}.values.yaml
                 '''
                 // if [ "`helm list | grep ${tag} | wc -l`" -eq "1" ]; then
                 //     helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
@@ -90,20 +116,22 @@ pipeline {
             }
         }
         stage('Helm') {
-            script {
-                try {
-                    sh "helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${params.tag}.values.yaml"
-                } catch (Exception e) {
-                    echo 'Exception occurred: ' + e.toString()
-                    sh "helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${params.tag}.values.yaml"
+           steps{
+                script {
+                    try {
+                        sh "helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml"
+                    } catch (Exception e) {
+                        echo 'Exception occurred: ' + e.toString()
+                        sh "helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml"
+                    }
                 }
-
             }
         }
     }
     post {
         always {
             script {
+                sh 'ls'
                 // try {
                 //     sh "helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${params.tag}.values.yaml"
                 // } catch (Exception e) {
