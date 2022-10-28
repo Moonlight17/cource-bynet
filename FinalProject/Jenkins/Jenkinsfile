@@ -72,4 +72,36 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                sh 'ls'
+            }
+            echo 'One way or another, I have finished'
+            deleteDir() /* clean up our workspace */
+        }
+        success {
+            // echo 'I succeeded!'
+            script {
+                mess = "✅✅✅ #${env.JOB_NAME}  \n\n Branch ${env.BRANCH_NAME}  *Successfully* builded \n\n It was build number (${env.BUILD_NUMBER}) \n\n ${tag} \n\n Backend Image: https://hub.docker.com/repository/docker/moonlight234/bynet_attendance_back \n Frontend: https://hub.docker.com/repository/docker/moonlight234/bynet_attendance_front"
+            }
+                telegramSend(message: "${mess}", chatId: -1001840248324)
+        }
+        unstable {
+            script {
+                mess = "🟡🟡🟡 #${env.JOB_NAME} Build \n\n **UNSTABLE** \n\n ${env.BUILD_NUMBER}"
+            }
+            telegramSend(message: "${mess}", chatId: -1001840248324)
+        }
+        failure {
+            // echo 'I succeeded!'
+            script {
+                mess = "🚨🚨🚨 #${env.JOB_NAME} Build with \n\n *ERROR* \n\n ${env.BUILD_NUMBER}, @Moonlight1790"
+            }
+            telegramSend(message: "${mess}", chatId: -1001840248324)
+        }
+        changed {
+            echo 'Things were different before...'
+        }
+    }
 }

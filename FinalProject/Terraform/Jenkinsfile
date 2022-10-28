@@ -1,11 +1,19 @@
+def awesomeVersion = 'UNKNOWN'
 pipeline {
     agent any
 
-    // parameters {
-    //     string(name: 'environment', defaultValue: 'default', description: 'Workspace/environment file to use for deployment')
-    //     string(name: 'version', defaultValue: '', description: 'Version variable to pass to Terraform')
-    //     booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-    // }
+    parameters {
+        string(
+            name: 'FRONT',
+            defaultValue: "${env.BRANCH_NAME == "develop" ? "dev-latest" : "latest"}",
+            description: 'Which version of the Frontend-app are we running?'
+        )
+        string(
+            name: 'BACK',
+            defaultValue: "${env.BRANCH_NAME == "develop" ? "dev-latest" : "latest"}",
+            description: 'Which version of the Backend-app are we running?'
+        )
+    }
     
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
@@ -78,15 +86,85 @@ pipeline {
                         sed -i "s/__POSTGRES_PASSWORD__/${POSTGRES_PASSWORD}/g" ${PATH_APP}helm-app/${tag}.values.yaml
                         sed -i "s/__REMOTE_USER__/${REMOTE_USER}/g" ${PATH_APP}helm-app/${tag}.values.yaml
                         sed -i "s/__REMOTE_PASSWORD__/${REMOTE_PASSWORD}/g" ${PATH_APP}helm-app/${tag}.values.yaml
-
-
-                        if [ "`helm list | grep ${tag} | wc -l`" -eq "1" ]; then
-                            helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
+                        
+                        echo 'check tag'
+                        echo "${FRONT}"
+                        echo "${BACK}"
+                        
+                        if [ 'dev-latest' = "${FRONT}" || 'latest' = "${FRONT}" ]; then
+                            echo "${FRONT}"
                         else
-                            helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
+                            sed -i 's/frontTag: \\"dev-latest\\"/frontTag: __frontTAG__/g' ${PATH_APP}helm-app/${tag}.values.yaml
+                            
+                            sed -i "s/__frontTAG__/${FRONT}/g" ${PATH_APP}helm-app/${tag}.values.yaml
                         fi
+
+                        if [ 'dev-latest' = "${BACK}" || 'latest' = "${BACK}" ]; then
+                            echo "${BACK}"
+                        else
+                            sed -i 's/backTag: \\"dev-latest\\"/backTag: __backTAG__/g' ${PATH_APP}helm-app/${tag}.values.yaml
+                            
+                            sed -i "s/__backTAG__/${BACK}/g" ${PATH_APP}helm-app/${tag}.values.yaml
+                        fi
+                        
+                        cat ${PATH_APP}helm-app/${tag}.values.yaml
                 '''
+                // if [ "`helm list | grep ${tag} | wc -l`" -eq "1" ]; then
+                //     helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
+                // else
+                //     helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml
+                // fi
             }
+        }
+        stage('Helm') {
+           steps{
+                script {
+                    try {
+                        sh "helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml"
+                    } catch (Exception e) {
+                        echo 'Exception occurred: ' + e.toString()
+                        sh "helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${tag}.values.yaml"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                sh 'ls'
+                // try {
+                //     sh "helm upgrade ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${params.tag}.values.yaml"
+                // } catch (Exception e) {
+                //     echo 'Exception occurred: ' + e.toString()
+                //     sh "helm install ${tag}-diploma-app ${PATH_APP}helm-app/ --values ${PATH_APP}helm-app/${params.tag}.values.yaml"
+                // }
+
+            }
+            echo 'One way or another, I have finished'
+            deleteDir() /* clean up our workspace */
+        }
+        success {
+            // echo 'I succeeded!'
+            script {
+                awesomeVersion = sh(returnStdout: true, script: "kubectl -n ${tag}-bynet-app get services frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'").trim()
+                sh 'echo ${awesomeVersion}'
+                mess = "✅✅✅ #${env.JOB_NAME}  \n\n Branch ${env.BRANCH_NAME}  *Successfully* builded \n\n It was build number (${env.BUILD_NUMBER}) \n\n ${tag}: \n\n ${awesomeVersion}"    
+            }
+                telegramSend(message: "${mess}", chatId: -1001840248324)
+        }
+        unstable {
+            echo 'I am unstable :/'
+        }
+        failure {
+            // echo 'I succeeded!'
+            script {
+                mess = "🚨🚨🚨 #${env.JOB_NAME} Build with \n\n *ERROR* \n\n ${env.BUILD_NUMBER}, @Moonlight1790"
+            }
+            telegramSend(message: "${mess}", chatId: -1001840248324)
+        }
+        changed {
+            echo 'Things were different before...'
         }
     }
 }
