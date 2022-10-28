@@ -159,7 +159,7 @@ pipeline {
         failure {
             // echo 'I succeeded!'
             script {
-                mess = "#${env.JOB_NAME} Build with \n\n *ERROR* \n\n ${env.BUILD_NUMBER}, @Moonlight1790"
+                mess = "🚨🚨🚨 #${env.JOB_NAME} Build with \n\n *ERROR* \n\n ${env.BUILD_NUMBER}, @Moonlight1790"
             }
             telegramSend(message: "${mess}", chatId: -1001840248324)
         }
