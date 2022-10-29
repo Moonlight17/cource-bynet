@@ -134,7 +134,7 @@ export default {
 .light-fon{
   min-height: 100vh;
   color: #2c3e50;
-  background-image: url('./assets/Fon2.jpeg');
+  background-image: url('./assets/FonLight.jpeg');
   background-attachment: fixed;
   background-position: top center;
   background-size: cover;

@@ -146,11 +146,6 @@ spec:
                 configMapKeyRef:
                   name: backend-configmap
                   key: backend_url
-            - name: VUE_APP_TYPE
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-configmap
-                  key: front_type
           ports:
             - name: project-port
               protocol: TCP
