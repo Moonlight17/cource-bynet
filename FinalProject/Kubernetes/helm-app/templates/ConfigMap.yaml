@@ -13,4 +13,3 @@ data:
   REMOTE_FOLDER: /var/tmp/csv_files
   database_url: {{ .Values.deployment.rdsendpoint }}
   backend_url: backend-service
-  front_type: {{ .Values.deployment.namespace }}
