@@ -19,13 +19,13 @@ spec:
         - image: moonlight234/bynet_attendance_back:dev-latest
           imagePullPolicy: Always
           name: backend
-          # resources:
-          #   requests:
-          #     memory: "170Mi"
-          #     cpu: "76m"
-          #   limits:
-          #     memory: "7168Mi"
-          #     cpu: "1000m"
+          resources:
+            requests:
+              memory: "1536Mi"
+              cpu: "200m"
+            limits:
+              memory: "2048Mi"
+              cpu: "300m"
           livenessProbe:
             httpGet:
               path: /
