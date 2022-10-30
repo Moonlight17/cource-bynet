@@ -33,6 +33,23 @@ resource "aws_security_group" "all_worker_mgmt" {
   }
 
   ingress {
+    description = "TLS from VPC"
+    from_port   = 10250
+    to_port     = 10250
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 4443
+    to_port     = 4443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
+  ingress {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
