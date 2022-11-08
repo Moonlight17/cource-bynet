@@ -67,13 +67,22 @@ pipeline {
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ apply -input=false tfplan_EKS'
             }
         }
+        stage('Monitoring') {
+            steps {
+                sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}helm/main.tf'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}helm/ init'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}helm/ plan -input=false -out tfplan_helm'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}helm/ show -no-color tfplan_helm > tfplan_helm.txt'
+                sh 'terraform -chdir=${PATH_INFRASTRUCTURE}helm/ apply -input=false tfplan_helm'
+            }
+        }
         stage('KUBER') {
             steps {
                     sh 'echo -------------------------------------------------------------------------------'
                     sh '''
                         CLUSTER_NAME=`terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ output -raw cluster_name`
                         aws eks update-kubeconfig --name ${CLUSTER_NAME}
-                        kubectl apply -f ${PATH_APP}metrics/components.yaml
+                        echo 'kubectl apply -f ${PATH_APP}metrics/components.yaml'
                         '''
                     
                     sh '''
@@ -116,7 +125,7 @@ pipeline {
                 // fi
             }
         }
-        stage('Helm') {
+        stage('Application') {
            steps{
                 script {
                     try {
