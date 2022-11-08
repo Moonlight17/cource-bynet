@@ -70,7 +70,7 @@ eks_managed_node_groups = {
       disk_size      = 20
 
       min_size     = 1
-      max_size     = 4
+      max_size     = 3
       desired_size = 1
 
       # pre_bootstrap_user_data = <<-EOT
