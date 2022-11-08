@@ -1,9 +1,3 @@
-
-provider "helm" {
-  kubernetes {
-    config_path = "/Users/moonlight/Documents/Work/Bynet/FinalProject/Kubernetes/eksconfig"
-  }
-}
 resource "helm_release" "cluster-autoscaler" {
   depends_on = [
     module.eks
