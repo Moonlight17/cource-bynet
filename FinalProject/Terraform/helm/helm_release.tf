@@ -11,11 +11,11 @@
 # }
 
 
-provider "helm" {
-  kubernetes {
-    config_path = "/Users/moonlight/Documents/Work/Bynet/FinalProject/Kubernetes/eksconfig"
-  }
-}
+# provider "helm" {
+#   kubernetes {
+#     config_path = "/Users/moonlight/Documents/Work/Bynet/FinalProject/Kubernetes/eksconfig"
+#   }
+# }
 # provider "helm" {
 #   kubernetes {
 #     host                   = data.aws_eks_cluster.cluster.endpoint
