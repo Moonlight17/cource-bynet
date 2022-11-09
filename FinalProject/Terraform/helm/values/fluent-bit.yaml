@@ -27,7 +27,7 @@ service:
 
 input:
   tag: "bynet.*"
-  path: "/var/log/containers/*bynet*"
+  path: "/app/debug.log"
   db: "/var/log/flb_kube.db"
   parser: docker
   dockerMode: "On"
@@ -193,13 +193,13 @@ volumes:
       path: /var/log
   - name: varlibdockercontainers
     hostPath:
-      path: /var/lib/docker/containers
+      path: /app/debug.log
 
 volumeMounts:
   - name: varlog
     mountPath: /var/log
   - name: varlibdockercontainers
-    mountPath: /var/lib/docker/containers
+    mountPath: /app/debug.log
     readOnly: true
 
 
