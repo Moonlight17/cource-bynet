@@ -7,6 +7,8 @@ import pandas
 import pysftp
 import paramiko
 
+import logging
+
 from datetime import datetime
 
 from aggregated.models import Participants, ListEmails, Aggregate, Lessons
@@ -20,6 +22,7 @@ from rest_framework import permissions
 
 from django.views.decorators.http import require_http_methods, require_GET, require_POST
 
+logger = logging.getLogger(__name__)
 
 
 # VARIABLES
@@ -53,6 +56,7 @@ def add_data_by_default(request):
             ListEmails.objects.get_or_create(user=Participants.objects.get(Name=row[1].Name), email=row[1].email)
     except OSError:
         print("ERROR \n Where files with Email data?")
+    logger.info("Added FirstNames by default")
     parsing_file(request)
     return HttpResponse("Initializing data loaded successfully.")
 
@@ -98,6 +102,7 @@ def insert_db(data):
                 user = Participants.objects.get(pk=email.user.id)
                 Aggregate.objects.get_or_create(participant=user, time_on_less=list_emails[item], date=date)
             except ListEmails.DoesNotExist:
+                logger.info("No data added for the the email!", item)
                 print("Email... ", item, "---", list_emails[item])
                 all_mails = ListEmails.objects.all()
                 for mail in all_mails:
@@ -105,6 +110,7 @@ def insert_db(data):
                 #     Need send notification in Slack each user
             except Participants.DoesNotExist:
                 print("Participants...blya")
+    logger.info("Files have been successfully uploaded to the Database")
                 #     Need send notification in Slack Manager the project
     # Write ABOUT PROBLEM!!! (######################---SLACK---######################)
 
@@ -197,6 +203,7 @@ def parsing_file(request):
         return HttpResponse(text)
 
     insert_db(all_data)
+    logger.info("Downloaded the files. We will output a list of empty email addresses first.")
     return HttpResponse("Hello, world. You're at the polls index.")
 
 @require_http_methods(["GET"])
@@ -206,11 +213,13 @@ def participants_list(request):
     students_ser = ParticipantSerializer(instance=students, many=True)
     employers_ser = ParticipantSerializer(instance=employers, many=True)
     data=[{'label': 'Students', 'options': students_ser.data},{'label': 'Employers', 'options': employers_ser.data}]
+    logger.info("Request to get a list of all visitors!")
     return JsonResponse(data, safe=False)
 
 @require_GET
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    logger.info("I was tested. I'm alive")
+    return HttpResponse("I'm alive!")
 
 
 def allListBetweenDate(from_date_pr, to_date_pr):
@@ -221,7 +230,12 @@ def allListBetweenDate(from_date_pr, to_date_pr):
 def allListBetweenDateAndFilters(request, from_date_pr, to_date_pr):
     print('_______________________________')
     # print(request.body)
-    data = json.loads(request.body)
+    try:
+        data = json.loads(request.body)
+    except:
+        logger.error("Error with the list of users the user wants to see. An incorrect request has arrived!")
+
+
     # print(data)
 
     print('_______________________________')

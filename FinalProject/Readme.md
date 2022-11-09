@@ -103,4 +103,4 @@ BACKEND_URL=backend     # This env you can change on service for connect into Ku
 
 * [x] **Scalability**: Horizontal Pod Autoscaling(HPA) in K8S
 
-* [ ] ~~**Monitoring + Logging**: Grafana, Prometheus~~
+* [x] **Monitoring + Logging**: CloudWatch + Fluentd

@@ -46,6 +46,7 @@ FinalProject/djangoProject/djangoProject/.env
 FinalProject/djangoProject/aggregated/migrations/
 ex3_python/djangoProject/aggregated/migrations/0004_alter_participants_pub_date.py
 FinalProject/djangoProject/Files/
+FinalProject/djangoProject/*.log
 
 # DataBase---------------|
 FinalProject/data/

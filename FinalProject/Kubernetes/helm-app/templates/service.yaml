@@ -16,6 +16,8 @@ kind: Service
 metadata:
   name: frontend-service
   namespace: {{ .Values.deployment.namespace }}-bynet-app
+  labels:
+    destiny: {{ .Values.deployment.namespace }}
 spec:
   selector:
     app: frontend
