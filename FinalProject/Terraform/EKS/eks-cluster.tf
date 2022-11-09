@@ -42,7 +42,7 @@ eks_managed_node_groups = {
     one = {
       name = "node-group-1"
 
-      instance_types = ["t3.micro"]
+      instance_types = ["t3a.small"]
       capacity_type  = "SPOT"
 
       desired_size = 2
@@ -65,7 +65,7 @@ eks_managed_node_groups = {
       name = "node-group-2"
 
       # instance_types = ["t3.micro"]
-      instance_types = ["t3.medium"]
+      instance_types = ["t3a.small"]
       capacity_type  = "SPOT"
       disk_size      = 20
 
