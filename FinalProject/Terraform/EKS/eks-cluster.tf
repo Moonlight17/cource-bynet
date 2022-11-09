@@ -46,8 +46,8 @@ eks_managed_node_groups = {
       capacity_type  = "SPOT"
 
       desired_size = 2
-      max_size     = 5
       min_size     = 1
+      max_size     = 5
 
       # pre_bootstrap_user_data = <<-EOT
       # echo 'foo bar'
@@ -69,9 +69,9 @@ eks_managed_node_groups = {
       capacity_type  = "SPOT"
       disk_size      = 20
 
-      min_size     = 1
-      max_size     = 3
       desired_size = 1
+      min_size     = 1
+      max_size     = 1
 
       # pre_bootstrap_user_data = <<-EOT
       # echo 'foo bar'
