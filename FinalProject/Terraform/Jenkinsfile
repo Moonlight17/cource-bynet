@@ -40,7 +40,7 @@ pipeline {
                 sh 'rm -rf ${PATH_INFRASTRUCTURE}/*/.terraform.lock.hcl'
             }
         }
-        stage('VPC') {
+        stage('Creating VPC') {
             steps {
                 sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}VPC/main.tf'
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}VPC/ init'
@@ -49,7 +49,7 @@ pipeline {
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}VPC/ apply -input=false tfplan_VPC'
             }
         }
-        stage('RDS') {
+        stage('Creating RDS') {
             steps {
                 sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}RDS/main.tf'
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ init'
@@ -58,7 +58,7 @@ pipeline {
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}RDS/ apply -input=false tfplan_RDS'
             }
         }
-        stage('EKS') {
+        stage('Creating EKS') {
             steps {
                 sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}EKS/main.tf'
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ init'
@@ -67,7 +67,7 @@ pipeline {
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}EKS/ apply -input=false tfplan_EKS'
             }
         }
-        stage('Monitoring') {
+        stage('Creating Monitoring') {
             steps {
                 sh 'sed -i \'/profile = var.profile/d\' ${PATH_INFRASTRUCTURE}helm/main.tf'
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}helm/ init'
@@ -76,7 +76,7 @@ pipeline {
                 sh 'terraform -chdir=${PATH_INFRASTRUCTURE}helm/ apply -input=false tfplan_helm'
             }
         }
-        stage('KUBER') {
+        stage('Applying KUBER') {
             steps {
                     sh 'echo -------------------------------------------------------------------------------'
                     sh '''
@@ -125,7 +125,7 @@ pipeline {
                 // fi
             }
         }
-        stage('Application') {
+        stage('Checking Application') {
            steps{
                 script {
                     try {
